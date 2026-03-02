@@ -28,6 +28,7 @@ This repository (`provenance`) is the **public protocol and libraries repo**.
 It contains:
 - Protocol drafts and supporting research.
 - Public, Apache-2.0 libraries intended for third-party implementation and interoperability.
+- A scoped open-source sample app/reference implementation for integration testing and onboarding.
 - Conformance vectors and test guidance.
 
 It does not contain the private cloud application implementation.
@@ -57,6 +58,7 @@ Status notes:
 - `spx-prov` is a **draft protocol**, not a production standard yet.
 - `v0.3` introduces an agent-aware profile and WebMCP binding assumptions that are **experimental and expected to evolve**.
 - Public library architecture and API surface are defined in `docs/libraries_plan.md`.
+- Recommended implementation path is a phased hybrid strategy (TS reference path first, Rust core promotion based on conformance/perf needs) as described in `docs/sample_app_alternatives.md`.
 
 Available today:
 - Draft protocol (`spx-prov` v0.1, v0.2, and v0.3 profiles)
@@ -74,25 +76,41 @@ Not yet included:
 
 ## Public Libraries Roadmap
 
-Planned package set (see `docs/libraries_plan.md`):
+Target package set (see `docs/libraries_plan.md`):
 
 1. `@provenance/spx-prov-spec`
 Protocol constants, schemas, and TypeScript types.
 
-2. `spx-prov-core` (Rust)
-Canonical engine for canonicalization, hashing, validation, and policy evaluation.
+2. TypeScript reference implementation (`spx-prov` validation + policy evaluation primitives)
+Initial canonical reference path for rapid protocol iteration and adoption.
 
-3. `@provenance/spx-prov-node`
-Node bindings over Rust core.
-
-4. `spx_prov` (Python)
-Python bindings over Rust core.
-
-5. `@provenance/spx-prov-tiptap`
+3. `@provenance/spx-prov-tiptap`
 Tiptap/ProseMirror interop package for attribution marks and clipboard behavior.
 
-6. `@provenance/spx-prov-conformance` (recommended)
+4. `@provenance/spx-prov-conformance` (recommended)
 Shared vectors/harness for implementation verification.
+
+5. `spx-prov-core` (Rust, phased)
+Introduced in parallel for hot/correctness-critical paths; promoted to canonical when vectors stabilize and cross-language parity requirements justify the overhead.
+
+6. `@provenance/spx-prov-node` and `spx_prov` (Python, phased)
+Bindings over Rust core when/if Rust promotion is adopted.
+
+## Sample App Scope
+
+This repo may include a **scoped OSS sample app** as a reference implementation.
+
+Include:
+- Attribution-aware editor flow and inspector UX
+- Clipboard provenance import/export (`application/x-provenance+json` + HTML fallback)
+- Basic claim/receipt handshake simulation or callback endpoint
+- Minimal provenance graph/lineage views for validation
+
+Exclude (kept private/commercial):
+- Multi-tenant enterprise controls (org roles, billing, quota systems)
+- Proprietary analytics and growth loops
+- Advanced enterprise connectors and operational tooling
+- Proprietary risk/policy heuristics
 
 ## Repository Guide
 
@@ -100,6 +118,7 @@ Shared vectors/harness for implementation verification.
 - [Protocol Draft v2](docs/protocol_draft_2.md)
 - [Protocol Draft v1](docs/protocol_draft_1.md)
 - [Public Libraries Plan](docs/libraries_plan.md)
+- [Sample App and Stack Alternatives](docs/sample_app_alternatives.md)
 - [Data Structuring](docs/data_structuring.md)
 - [POC Plan](docs/draft_plan_1.md)
 - [Plan v2: Rights Policy and Permissions](docs/draft_plan_2.md)
@@ -119,8 +138,11 @@ This README is primarily for:
 
 - Validate and refine `v0.3` (agent-aware profile + WebMCP binding assumptions).
 - Publish language-neutral conformance vectors for clipboard + agent tool-call paths.
-- Implement the public libraries with a Rust canonical core and thin Node/Python bindings.
-- Add editor interop package support for Tiptap/ProseMirror clipboard and attribution workflows.
+- Ship a TypeScript reference implementation for validation/policy logic first.
+- Launch a scoped OSS sample app that exercises protocol, policy, and handshake flows end-to-end.
+- Benchmark realistic long-history/high-span workloads to confirm true bottlenecks.
+- Introduce Rust core modules selectively and promote to canonical only when justified by measured conformance/performance and cross-language needs.
+- Add Node/Python Rust bindings as a phased follow-on when Rust core promotion is warranted.
 - Build credibility toward broader ecosystem participation (including future engagement with the Content Authenticity Initiative).
 
 ## Glossary
