@@ -1,0 +1,14 @@
+{
+  "grant": {
+    "grantId": "01JGRANT0012",
+    "statusAtCopy": "active",
+    "statusAtPaste": "revoked",
+    "revokedAt": "2026-03-01T12:30:00Z"
+  },
+  "segment": {
+    "segmentId": "seg_1",
+    "rights": {
+      "policyMode": "permission_required"
+    }
+  }
+}

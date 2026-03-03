@@ -68,6 +68,8 @@ Available today:
 - WebMCP integration research (`docs/webmcp_research.md`)
 - C2PA alignment research notes (`docs/c2pa_research.md`)
 - Public libraries implementation plan (`docs/libraries_plan.md`)
+- Published Level 1-4 conformance vector baseline (`vectors/v0.3`)
+- Conformance runner contract and validation tooling (`docs/conformance_runner_contract.md`, `tools/conformance`)
 
 Not yet included:
 - Stable `1.0` protocol and finalized compatibility guarantees
@@ -117,6 +119,10 @@ Exclude (kept private/commercial):
 - [Protocol Draft v3 (Current)](docs/protocol_draft_3.md)
 - [Protocol Draft v2](docs/protocol_draft_2.md)
 - [Protocol Draft v1](docs/protocol_draft_1.md)
+- [Conformance Vectors Guide](docs/conformance_vectors.md)
+- [Conformance Runner Contract](docs/conformance_runner_contract.md)
+- [Conformance Matrix](docs/conformance_matrix.md)
+- [Conformance Reports](conformance_reports/README.md)
 - [Public Libraries Plan](docs/libraries_plan.md)
 - [Sample App and Stack Alternatives](docs/sample_app_alternatives.md)
 - [Sample App Plan (Protocol-First)](docs/sample_app_plans.md)
@@ -138,7 +144,7 @@ This README is primarily for:
 ## Near-Term Direction
 
 - Validate and refine `v0.3` (agent-aware profile + WebMCP binding assumptions).
-- Publish language-neutral conformance vectors for clipboard + agent tool-call paths.
+- Expand published conformance vectors from current Levels 1-4 baseline to include Level 5 WebMCP/tool-governance coverage.
 - Ship a TypeScript reference implementation for validation/policy logic first.
 - Launch a scoped OSS sample app that exercises protocol, policy, and handshake flows end-to-end.
 - Benchmark realistic long-history/high-span workloads to confirm true bottlenecks.
@@ -154,7 +160,8 @@ This is the recommended order of implementation work:
    - Finalize/align schemas and required enums/status fields from `docs/protocol_draft_3.md`.
    - Document any open questions as protocol issues before coding.
 2. **Publish conformance vectors**
-   - Add language-neutral test vectors for clipboard, transfer claims/receipts, permission, and tool-call paths.
+   - Add language-neutral test vectors for clipboard, transfer claims/receipts, permission, and mixed-origin rights outcomes (Levels 1-4 baseline).
+   - Add WebMCP/tool-call (Level 5) vectors in a follow-up `v0.3.x` vector release.
    - Define expected outcomes and reason codes for each vector.
 3. **Ship `@provenance/spx-prov-spec`**
    - Publish constants, TypeScript types, and schema loading/validation helpers.

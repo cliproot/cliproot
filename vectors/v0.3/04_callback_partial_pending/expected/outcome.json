@@ -1,0 +1,34 @@
+{
+  "policyOutcome": "allow",
+  "receiptStatus": "pending_async",
+  "reasonCodes": [
+    {
+      "code": "WARN_PARTIAL_PENDING_SOURCE_UNREACHABLE",
+      "scope": "receipt",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [
+      "paste"
+    ],
+    "claims": [
+      "transfer_claim:https://a.example",
+      "transfer_claim:https://b.example"
+    ],
+    "receipts": [
+      "transfer_receipt:https://a.example",
+      "transfer_receipt:https://b.example"
+    ],
+    "decisions": [
+      "policy_decision"
+    ]
+  },
+  "auditEvents": [
+    {
+      "phase": "claim_post",
+      "status": "partial_pending",
+      "reasonCode": "WARN_PARTIAL_PENDING_SOURCE_UNREACHABLE"
+    }
+  ]
+}

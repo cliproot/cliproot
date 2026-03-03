@@ -1,0 +1,6 @@
+{
+  "protocol": "spx-prov",
+  "bundleId": "01JBASE0002",
+  "sourceInstance": "https://alice.example",
+  "segments": []
+}

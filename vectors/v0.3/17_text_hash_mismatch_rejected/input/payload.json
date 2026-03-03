@@ -1,0 +1,16 @@
+{
+  "protocol": "spx-prov",
+  "version": "0.3",
+  "bundleId": "01JBASE0017",
+  "segments": [
+    {
+      "segmentId": "seg_a",
+      "order": 0,
+      "text": "Actual text",
+      "textHash": "sha256:does-not-match",
+      "rights": {
+        "policyMode": "open"
+      }
+    }
+  ]
+}

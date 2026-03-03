@@ -1,0 +1,31 @@
+{
+  "vectorId": "VEC_L2_CALLBACK_PARTIAL_PENDING",
+  "title": "Level 2 callback by source with partial pending outcome",
+  "level": 2,
+  "category": "callback",
+  "description": "Callbacks are grouped by source, and one unreachable source produces pending status while others proceed.",
+  "requires": [
+    "parseEnvelope",
+    "validateEnvelope",
+    "processTransferClaim"
+  ],
+  "tags": [
+    "callback",
+    "partial-failure"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "parseEnvelope",
+      "validateEnvelope",
+      "processTransferClaim"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

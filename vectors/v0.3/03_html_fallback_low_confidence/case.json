@@ -1,0 +1,29 @@
+{
+  "vectorId": "VEC_L1_HTML_FALLBACK_LOW_CONFIDENCE",
+  "title": "Level 1 HTML fallback with low confidence marker",
+  "level": 1,
+  "category": "import-only",
+  "description": "When custom MIME is missing, HTML fallback is accepted with low confidence reason code.",
+  "requires": [
+    "parseEnvelope",
+    "validateEnvelope"
+  ],
+  "tags": [
+    "fallback",
+    "html"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "parseEnvelope",
+      "validateEnvelope"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

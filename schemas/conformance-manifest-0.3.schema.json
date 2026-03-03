@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://provenance.dev/schemas/conformance-manifest-0.3.schema.json",
+  "title": "ConformanceManifest",
+  "type": "object",
+  "required": [
+    "protocol",
+    "vectorSetVersion",
+    "manifestVersion",
+    "runnerContractVersion",
+    "vectorSemverPolicy",
+    "vectors"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "const": "spx-prov"
+    },
+    "vectorSetVersion": {
+      "type": "string",
+      "const": "0.3"
+    },
+    "manifestVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "runnerContractVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "vectorSemverPolicy": {
+      "type": "object",
+      "required": ["additive", "breaking"],
+      "additionalProperties": false,
+      "properties": {
+        "additive": { "type": "string" },
+        "breaking": { "type": "string" }
+      }
+    },
+    "vectors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "vectorId",
+          "path",
+          "level",
+          "category",
+          "requires",
+          "tags",
+          "status",
+          "introducedIn",
+          "updatedIn"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "vectorId": {
+            "type": "string",
+            "pattern": "^[A-Z0-9_]+$"
+          },
+          "path": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "category": {
+            "type": "string"
+          },
+          "requires": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": [
+                "parseEnvelope",
+                "validateEnvelope",
+                "evaluatePolicy",
+                "processTransferClaim",
+                "verifyIdempotency"
+              ]
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "deprecated", "draft"]
+          },
+          "introducedIn": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+          },
+          "updatedIn": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+          }
+        }
+      }
+    }
+  }
+}

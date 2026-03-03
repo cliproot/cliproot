@@ -1,0 +1,31 @@
+{
+  "vectorId": "VEC_L4_PERMISSION_REQUIRED_NO_GRANT",
+  "title": "Level 4 permission_required without grant rejected",
+  "level": 4,
+  "category": "rights-aware-enforcement",
+  "description": "Permission required content without active grant is rejected or marked pending owner approval.",
+  "requires": [
+    "validateEnvelope",
+    "evaluatePolicy",
+    "processTransferClaim"
+  ],
+  "tags": [
+    "policy",
+    "negative"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "validateEnvelope",
+      "evaluatePolicy",
+      "processTransferClaim"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

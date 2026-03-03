@@ -1,0 +1,13 @@
+{
+  "protocol": "spx-prov",
+  "version": "0.3",
+  "claimId": "01JCLAIM0006",
+  "claimType": "transfer_claim",
+  "segments": [
+    {
+      "segmentId": "seg_1",
+      "sourceEntityId": "ent_unknown",
+      "textHash": "sha256:1111"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "vectorId": "VEC_L3_UNKNOWN_SOURCE_ENTITY_REJECTED",
+  "title": "Level 3 unknown source entity is rejected",
+  "level": 3,
+  "category": "signed-mutual-attestation",
+  "description": "Claim referencing unknown source entity returns rejected_unknown_source_entity.",
+  "requires": [
+    "parseEnvelope",
+    "validateEnvelope",
+    "processTransferClaim"
+  ],
+  "tags": [
+    "negative",
+    "entity"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "parseEnvelope",
+      "validateEnvelope",
+      "processTransferClaim"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

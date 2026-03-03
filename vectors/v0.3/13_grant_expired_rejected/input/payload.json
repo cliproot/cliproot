@@ -1,0 +1,14 @@
+{
+  "grant": {
+    "grantId": "01JGRANT0013",
+    "status": "active",
+    "issuedAt": "2025-01-01T00:00:00Z",
+    "expiresAt": "2026-02-01T00:00:00Z"
+  },
+  "segment": {
+    "segmentId": "seg_1",
+    "rights": {
+      "policyMode": "permission_required"
+    }
+  }
+}

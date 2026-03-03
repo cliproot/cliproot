@@ -1,0 +1,30 @@
+{
+  "vectorId": "VEC_L3_REPLAY_CLAIM_IDEMPOTENT",
+  "title": "Level 3 duplicate claimId is idempotent",
+  "level": 3,
+  "category": "signed-mutual-attestation",
+  "description": "Duplicate claimId must not duplicate side effects and should return the same receipt outcome.",
+  "requires": [
+    "processTransferClaim",
+    "verifyIdempotency"
+  ],
+  "tags": [
+    "idempotency",
+    "replay"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "processTransferClaim",
+      "verifyIdempotency"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json",
+      "replay": "input/replay.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "firstAttempt": {
+    "claimId": "01JCLAIM0007",
+    "claimType": "transfer_claim",
+    "status": "submitted"
+  },
+  "secondAttempt": {
+    "claimId": "01JCLAIM0007",
+    "claimType": "transfer_claim",
+    "status": "submitted"
+  }
+}

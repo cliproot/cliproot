@@ -1,0 +1,31 @@
+{
+  "vectorId": "VEC_L4_MIXED_POLICY_MULTI_ORIGIN",
+  "title": "Level 4 mixed policy, multi-origin partial pending",
+  "level": 4,
+  "category": "rights-aware-enforcement",
+  "description": "Three segments across two sources produce segmented outcomes and partial pending callback status.",
+  "requires": [
+    "validateEnvelope",
+    "evaluatePolicy",
+    "processTransferClaim"
+  ],
+  "tags": [
+    "mixed-policy",
+    "multi-origin"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "validateEnvelope",
+      "evaluatePolicy",
+      "processTransferClaim"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

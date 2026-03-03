@@ -1,0 +1,18 @@
+{
+  "protocol": "spx-prov",
+  "version": "0.3",
+  "claimId": "01JCLAIM0005",
+  "claimType": "transfer_claim",
+  "signature": {
+    "alg": "Ed25519",
+    "kid": "did:key:zbad#k1",
+    "sig": "base64-invalid"
+  },
+  "segments": [
+    {
+      "segmentId": "seg_1",
+      "sourceEntityId": "ent_a1",
+      "textHash": "sha256:1111"
+    }
+  ]
+}

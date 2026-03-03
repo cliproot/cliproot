@@ -1,0 +1,28 @@
+{
+  "policyOutcome": null,
+  "receiptStatus": "rejected_invalid_signature",
+  "reasonCodes": [
+    {
+      "code": "ERR_SIGNATURE_INVALID",
+      "scope": "claim",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [],
+    "claims": [
+      "transfer_claim"
+    ],
+    "receipts": [
+      "transfer_receipt"
+    ],
+    "decisions": []
+  },
+  "auditEvents": [
+    {
+      "phase": "signature_verify",
+      "status": "rejected",
+      "reasonCode": "ERR_SIGNATURE_INVALID"
+    }
+  ]
+}

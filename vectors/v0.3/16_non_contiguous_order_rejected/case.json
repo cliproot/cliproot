@@ -1,0 +1,27 @@
+{
+  "vectorId": "VEC_L4_NON_CONTIGUOUS_ORDER_REJECTED",
+  "title": "Validation negative: non-contiguous segment order rejected",
+  "level": 4,
+  "category": "validation",
+  "description": "Segment orders must be contiguous; order gap should reject envelope.",
+  "requires": [
+    "validateEnvelope"
+  ],
+  "tags": [
+    "negative",
+    "segment-order"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "validateEnvelope"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

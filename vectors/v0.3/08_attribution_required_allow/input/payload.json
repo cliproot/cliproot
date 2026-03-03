@@ -1,0 +1,12 @@
+{
+  "segment": {
+    "segmentId": "seg_1",
+    "rights": {
+      "policyMode": "attribution_required",
+      "attribution": {
+        "required": true,
+        "preferredText": "Jane Doe, 2026"
+      }
+    }
+  }
+}

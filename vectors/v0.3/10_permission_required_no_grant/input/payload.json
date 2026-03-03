@@ -1,0 +1,13 @@
+{
+  "accessControl": {
+    "ownerAgentId": "agent_owner",
+    "defaultDecision": "deny",
+    "grants": []
+  },
+  "segment": {
+    "segmentId": "seg_1",
+    "rights": {
+      "policyMode": "permission_required"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "vectorId": "VEC_L4_TEXT_HASH_MISMATCH_REJECTED",
+  "title": "Validation negative: text hash mismatch rejected",
+  "level": 4,
+  "category": "validation",
+  "description": "textHash mismatch with supplied segment text must fail validation.",
+  "requires": [
+    "validateEnvelope"
+  ],
+  "tags": [
+    "negative",
+    "text-hash"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "validateEnvelope"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "policyOutcome": "deny_no_permission",
+  "receiptStatus": "rejected_no_permission",
+  "reasonCodes": [
+    {
+      "code": "ERR_NO_ACTIVE_GRANT",
+      "scope": "policy",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [
+      "policy_decision"
+    ],
+    "claims": [
+      "transfer_claim"
+    ],
+    "receipts": [
+      "transfer_receipt"
+    ],
+    "decisions": [
+      "policy_decision"
+    ]
+  },
+  "auditEvents": [
+    {
+      "phase": "policy_eval",
+      "status": "deny",
+      "reasonCode": "ERR_NO_ACTIVE_GRANT"
+    }
+  ]
+}

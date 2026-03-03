@@ -1,0 +1,11 @@
+{
+  "clipboard": {
+    "formats": [
+      "text/html"
+    ],
+    "html": "<span data-prov-entity=\"ent_html_1\">Quoted sentence A.</span>"
+  },
+  "fallbackPolicy": {
+    "lowConfidence": true
+  }
+}

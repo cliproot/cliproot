@@ -1,0 +1,27 @@
+{
+  "vectorId": "VEC_L4_INVALID_POLICY_ENUM_REJECTED",
+  "title": "Validation negative: invalid policy enum rejected",
+  "level": 4,
+  "category": "validation",
+  "description": "Unknown policyMode enum must fail validation.",
+  "requires": [
+    "validateEnvelope"
+  ],
+  "tags": [
+    "negative",
+    "enum"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "validateEnvelope"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

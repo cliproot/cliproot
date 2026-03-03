@@ -1,0 +1,28 @@
+{
+  "policyOutcome": null,
+  "receiptStatus": "rejected_unknown_source_entity",
+  "reasonCodes": [
+    {
+      "code": "ERR_UNKNOWN_SOURCE_ENTITY",
+      "scope": "claim",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [],
+    "claims": [
+      "transfer_claim"
+    ],
+    "receipts": [
+      "transfer_receipt"
+    ],
+    "decisions": []
+  },
+  "auditEvents": [
+    {
+      "phase": "claim_validate",
+      "status": "rejected",
+      "reasonCode": "ERR_UNKNOWN_SOURCE_ENTITY"
+    }
+  ]
+}
