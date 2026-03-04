@@ -1,0 +1,15 @@
+{
+  "protocol": "spx-prov",
+  "version": "0.3",
+  "segments": [
+    {
+      "segmentId": "seg_1",
+      "order": 0,
+      "rights": {
+        "policyMode": "not_a_real_mode"
+      },
+      "text": "x",
+      "textHash": "sha256:x"
+    }
+  ]
+}

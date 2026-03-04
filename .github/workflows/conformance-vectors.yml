@@ -1,0 +1,87 @@
+name: Conformance Vectors (Warn)
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  conformance-vectors-warn:
+    name: Validate vectors and publish report artifacts (warn-only)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate vector structure (warn-only)
+        shell: bash
+        run: |
+          set +e
+          python3 tools/conformance/validate_vectors.py --manifest vectors/v0.3/manifest.json
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            echo "::warning title=Conformance vector validation failed::Fix vector schema/manifest consistency before Phase C hard gating."
+          fi
+          exit 0
+
+      - name: Check protocol/vector delta alignment (warn-only)
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set +e
+          base_sha="${{ github.event.pull_request.base.sha }}"
+          head_sha="${{ github.sha }}"
+          changed_files=$(git diff --name-only "$base_sha" "$head_sha")
+
+          protocol_changed=$(echo "$changed_files" | grep -E '^docs/protocol_draft_[0-9]+\.md$' >/dev/null; echo $?)
+          vectors_changed=$(echo "$changed_files" | grep -E '^vectors/' >/dev/null; echo $?)
+
+          if [ "$protocol_changed" -eq 0 ] && [ "$vectors_changed" -ne 0 ]; then
+            echo "::warning title=Protocol changed without vector delta::This PR changes protocol draft files but does not update vectors/. Add vector updates or document why none are required."
+          fi
+
+          exit 0
+
+      - name: Check expected-outcome drift rationale (warn-only)
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set +e
+          base_sha="${{ github.event.pull_request.base.sha }}"
+          head_sha="${{ github.sha }}"
+          changed_files=$(git diff --name-only "$base_sha" "$head_sha")
+
+          expected_changed=$(echo "$changed_files" | grep -E '^vectors/v0.3/.+/expected/' >/dev/null; echo $?)
+          protocol_changed=$(echo "$changed_files" | grep -E '^docs/protocol_draft_[0-9]+\.md$' >/dev/null; echo $?)
+
+          if [ "$expected_changed" -eq 0 ] && [ "$protocol_changed" -ne 0 ]; then
+            echo "::warning title=Expected outcomes changed::Expected conformance outcomes changed without protocol draft updates. Ensure PR includes justification and compatibility notes."
+          fi
+
+          exit 0
+
+      - name: Generate conformance matrix markdown
+        run: |
+          python3 tools/conformance/generate_matrix.py \
+            --reports-root conformance_reports/v0.3 \
+            --manifest vectors/v0.3/manifest.json \
+            --output docs/conformance_matrix.md
+
+      - name: Upload conformance artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: conformance-v0.3-artifacts
+          path: |
+            conformance_reports/v0.3
+            docs/conformance_matrix.md
+          if-no-files-found: warn

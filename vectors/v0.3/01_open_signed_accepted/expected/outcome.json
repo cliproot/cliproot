@@ -1,0 +1,37 @@
+{
+  "policyOutcome": "allow",
+  "receiptStatus": "accepted",
+  "reasonCodes": [
+    {
+      "code": "OK_TRANSFER_ACCEPTED",
+      "scope": "receipt",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [
+      "paste"
+    ],
+    "claims": [
+      "transfer_claim"
+    ],
+    "receipts": [
+      "transfer_receipt"
+    ],
+    "decisions": [
+      "policy_decision"
+    ]
+  },
+  "auditEvents": [
+    {
+      "phase": "validate",
+      "status": "ok",
+      "reasonCode": "OK_SCHEMA_VALID"
+    },
+    {
+      "phase": "receipt",
+      "status": "accepted",
+      "reasonCode": "OK_TRANSFER_ACCEPTED"
+    }
+  ]
+}

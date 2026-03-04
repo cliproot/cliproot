@@ -1,0 +1,29 @@
+{
+  "vectorId": "VEC_L1_V02_COMPAT_INGEST",
+  "title": "Level 1 compatibility: ingest valid v0.2 envelope",
+  "level": 1,
+  "category": "compatibility",
+  "description": "v0.3 runtime ingests supported v0.2 envelope shape when feasible.",
+  "requires": [
+    "parseEnvelope",
+    "validateEnvelope"
+  ],
+  "tags": [
+    "compatibility",
+    "v0.2"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "parseEnvelope",
+      "validateEnvelope"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

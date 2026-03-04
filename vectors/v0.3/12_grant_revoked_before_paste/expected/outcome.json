@@ -1,0 +1,33 @@
+{
+  "policyOutcome": "deny_no_permission",
+  "receiptStatus": "rejected_no_permission",
+  "reasonCodes": [
+    {
+      "code": "ERR_GRANT_REVOKED",
+      "scope": "policy",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [
+      "policy_decision",
+      "grant_revoked"
+    ],
+    "claims": [
+      "transfer_claim"
+    ],
+    "receipts": [
+      "transfer_receipt"
+    ],
+    "decisions": [
+      "policy_decision"
+    ]
+  },
+  "auditEvents": [
+    {
+      "phase": "grant_check",
+      "status": "revoked",
+      "reasonCode": "ERR_GRANT_REVOKED"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "vectorId": "VEC_L4_PRIVATE_NO_COPY_NOTICE",
+  "title": "Level 4 private_no_copy with notice replacement",
+  "level": 4,
+  "category": "rights-aware-enforcement",
+  "description": "private_no_copy content should be denied and replaced with notice according to copyControl.",
+  "requires": [
+    "validateEnvelope",
+    "evaluatePolicy",
+    "processTransferClaim"
+  ],
+  "tags": [
+    "policy",
+    "copy-control"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "validateEnvelope",
+      "evaluatePolicy",
+      "processTransferClaim"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

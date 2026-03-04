@@ -1,0 +1,190 @@
+{
+  "reportVersion": "0.3.0",
+  "protocol": "spx-prov",
+  "vectorSetVersion": "0.3",
+  "implementation": {
+    "id": "spec-baseline",
+    "version": "0.0.1",
+    "notes": "Seed report to demonstrate result envelope format and matrix generation. Replace with real runtime reports."
+  },
+  "generatedAt": "2026-03-03T15:00:00Z",
+  "results": [
+    {
+      "vectorId": "VEC_L1_OPEN_SIGNED_ACCEPTED",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L1_MALFORMED_ENVELOPE_REJECTED",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L1_HTML_FALLBACK_LOW_CONFIDENCE",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L2_CALLBACK_PARTIAL_PENDING",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L3_INVALID_SIGNATURE_REJECTED",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L3_UNKNOWN_SOURCE_ENTITY_REJECTED",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L3_REPLAY_CLAIM_IDEMPOTENT",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L4_ATTRIBUTION_REQUIRED_ALLOW",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L4_PERMISSION_REQUIRED_ACTIVE_GRANT",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L4_PERMISSION_REQUIRED_NO_GRANT",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L4_PRIVATE_NO_COPY_NOTICE",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L4_GRANT_REVOKED_BEFORE_PASTE",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L4_GRANT_EXPIRED_REJECTED",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L4_INVALID_POLICY_ENUM_REJECTED",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L4_DUPLICATE_SEGMENT_ID_REJECTED",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L4_NON_CONTIGUOUS_ORDER_REJECTED",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L4_TEXT_HASH_MISMATCH_REJECTED",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L4_MIXED_POLICY_MULTI_ORIGIN",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    },
+    {
+      "vectorId": "VEC_L1_V02_COMPAT_INGEST",
+      "status": "pass",
+      "failureReason": null,
+      "diagnostics": {
+        "source": "seed-baseline",
+        "note": "Initial baseline report for vector publication scaffolding."
+      }
+    }
+  ],
+  "summary": {
+    "pass": 19,
+    "fail": 0,
+    "skip": 0,
+    "total": 19
+  }
+}

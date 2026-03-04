@@ -1,0 +1,32 @@
+{
+  "policyOutcome": "allow",
+  "receiptStatus": "accepted_unsigned",
+  "reasonCodes": [
+    {
+      "code": "OK_V02_COMPAT_INGEST",
+      "scope": "bundle",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [
+      "paste"
+    ],
+    "claims": [
+      "transfer_claim"
+    ],
+    "receipts": [
+      "transfer_receipt"
+    ],
+    "decisions": [
+      "policy_decision"
+    ]
+  },
+  "auditEvents": [
+    {
+      "phase": "compat_ingest",
+      "status": "accepted",
+      "reasonCode": "OK_V02_COMPAT_INGEST"
+    }
+  ]
+}

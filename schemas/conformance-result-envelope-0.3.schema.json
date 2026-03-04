@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://provenance.dev/schemas/conformance-result-envelope-0.3.schema.json",
+  "title": "ConformanceResultEnvelope",
+  "type": "object",
+  "required": [
+    "reportVersion",
+    "protocol",
+    "vectorSetVersion",
+    "implementation",
+    "generatedAt",
+    "results",
+    "summary"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "reportVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "protocol": {
+      "type": "string",
+      "const": "spx-prov"
+    },
+    "vectorSetVersion": {
+      "type": "string",
+      "const": "0.3"
+    },
+    "implementation": {
+      "type": "object",
+      "required": ["id", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "version": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["vectorId", "status", "failureReason"],
+        "additionalProperties": false,
+        "properties": {
+          "vectorId": {
+            "type": "string",
+            "pattern": "^[A-Z0-9_]+$"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pass", "fail", "skip"]
+          },
+          "failureReason": {
+            "type": ["string", "null"]
+          },
+          "diagnostics": {
+            "type": ["object", "null"],
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["pass", "fail", "skip", "total"],
+      "additionalProperties": false,
+      "properties": {
+        "pass": { "type": "integer", "minimum": 0 },
+        "fail": { "type": "integer", "minimum": 0 },
+        "skip": { "type": "integer", "minimum": 0 },
+        "total": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

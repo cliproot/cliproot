@@ -1,0 +1,221 @@
+{
+  "protocol": "spx-prov",
+  "vectorSetVersion": "0.3",
+  "manifestVersion": "0.3.0",
+  "runnerContractVersion": "0.1.0",
+  "vectorSemverPolicy": {
+    "additive": "0.3.x",
+    "breaking": "0.4.0"
+  },
+  "vectors": [
+    {
+      "vectorId": "VEC_L1_OPEN_SIGNED_ACCEPTED",
+      "path": "01_open_signed_accepted",
+      "level": 1,
+      "category": "import-only",
+      "requires": ["parseEnvelope", "validateEnvelope"],
+      "tags": ["positive", "signed", "clipboard"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L1_MALFORMED_ENVELOPE_REJECTED",
+      "path": "02_malformed_envelope_rejected",
+      "level": 1,
+      "category": "import-only",
+      "requires": ["parseEnvelope", "validateEnvelope"],
+      "tags": ["negative", "schema"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L1_HTML_FALLBACK_LOW_CONFIDENCE",
+      "path": "03_html_fallback_low_confidence",
+      "level": 1,
+      "category": "import-only",
+      "requires": ["parseEnvelope", "validateEnvelope"],
+      "tags": ["fallback", "html"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L2_CALLBACK_PARTIAL_PENDING",
+      "path": "04_callback_partial_pending",
+      "level": 2,
+      "category": "callback",
+      "requires": ["parseEnvelope", "validateEnvelope", "processTransferClaim"],
+      "tags": ["callback", "partial-failure"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L3_INVALID_SIGNATURE_REJECTED",
+      "path": "05_invalid_signature_rejected",
+      "level": 3,
+      "category": "signed-mutual-attestation",
+      "requires": ["parseEnvelope", "validateEnvelope", "processTransferClaim"],
+      "tags": ["negative", "signature"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L3_UNKNOWN_SOURCE_ENTITY_REJECTED",
+      "path": "06_unknown_source_entity_rejected",
+      "level": 3,
+      "category": "signed-mutual-attestation",
+      "requires": ["parseEnvelope", "validateEnvelope", "processTransferClaim"],
+      "tags": ["negative", "entity"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L3_REPLAY_CLAIM_IDEMPOTENT",
+      "path": "07_replay_claim_idempotent",
+      "level": 3,
+      "category": "signed-mutual-attestation",
+      "requires": ["processTransferClaim", "verifyIdempotency"],
+      "tags": ["idempotency", "replay"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L4_ATTRIBUTION_REQUIRED_ALLOW",
+      "path": "08_attribution_required_allow",
+      "level": 4,
+      "category": "rights-aware-enforcement",
+      "requires": ["validateEnvelope", "evaluatePolicy", "processTransferClaim"],
+      "tags": ["policy", "attribution"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L4_PERMISSION_REQUIRED_ACTIVE_GRANT",
+      "path": "09_permission_required_active_grant",
+      "level": 4,
+      "category": "rights-aware-enforcement",
+      "requires": ["validateEnvelope", "evaluatePolicy", "processTransferClaim"],
+      "tags": ["policy", "grant"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L4_PERMISSION_REQUIRED_NO_GRANT",
+      "path": "10_permission_required_no_grant",
+      "level": 4,
+      "category": "rights-aware-enforcement",
+      "requires": ["validateEnvelope", "evaluatePolicy", "processTransferClaim"],
+      "tags": ["policy", "negative"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L4_PRIVATE_NO_COPY_NOTICE",
+      "path": "11_private_no_copy_notice",
+      "level": 4,
+      "category": "rights-aware-enforcement",
+      "requires": ["validateEnvelope", "evaluatePolicy", "processTransferClaim"],
+      "tags": ["policy", "copy-control"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L4_GRANT_REVOKED_BEFORE_PASTE",
+      "path": "12_grant_revoked_before_paste",
+      "level": 4,
+      "category": "rights-aware-enforcement",
+      "requires": ["validateEnvelope", "evaluatePolicy", "processTransferClaim"],
+      "tags": ["policy", "grant-revoked"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L4_GRANT_EXPIRED_REJECTED",
+      "path": "13_grant_expired_rejected",
+      "level": 4,
+      "category": "rights-aware-enforcement",
+      "requires": ["validateEnvelope", "evaluatePolicy", "processTransferClaim"],
+      "tags": ["policy", "grant-expired"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L4_INVALID_POLICY_ENUM_REJECTED",
+      "path": "14_invalid_policy_enum_rejected",
+      "level": 4,
+      "category": "validation",
+      "requires": ["validateEnvelope"],
+      "tags": ["negative", "enum"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L4_DUPLICATE_SEGMENT_ID_REJECTED",
+      "path": "15_duplicate_segment_id_rejected",
+      "level": 4,
+      "category": "validation",
+      "requires": ["validateEnvelope"],
+      "tags": ["negative", "segment-id"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L4_NON_CONTIGUOUS_ORDER_REJECTED",
+      "path": "16_non_contiguous_order_rejected",
+      "level": 4,
+      "category": "validation",
+      "requires": ["validateEnvelope"],
+      "tags": ["negative", "segment-order"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L4_TEXT_HASH_MISMATCH_REJECTED",
+      "path": "17_text_hash_mismatch_rejected",
+      "level": 4,
+      "category": "validation",
+      "requires": ["validateEnvelope"],
+      "tags": ["negative", "text-hash"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L4_MIXED_POLICY_MULTI_ORIGIN",
+      "path": "18_mixed_policy_multi_origin",
+      "level": 4,
+      "category": "rights-aware-enforcement",
+      "requires": ["validateEnvelope", "evaluatePolicy", "processTransferClaim"],
+      "tags": ["mixed-policy", "multi-origin"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    },
+    {
+      "vectorId": "VEC_L1_V02_COMPAT_INGEST",
+      "path": "19_v02_compat_ingest",
+      "level": 1,
+      "category": "compatibility",
+      "requires": ["parseEnvelope", "validateEnvelope"],
+      "tags": ["compatibility", "v0.2"],
+      "status": "active",
+      "introducedIn": "0.3.0",
+      "updatedIn": "0.3.0"
+    }
+  ]
+}

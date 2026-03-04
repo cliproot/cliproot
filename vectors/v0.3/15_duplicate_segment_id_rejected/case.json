@@ -1,0 +1,27 @@
+{
+  "vectorId": "VEC_L4_DUPLICATE_SEGMENT_ID_REJECTED",
+  "title": "Validation negative: duplicate segmentId rejected",
+  "level": 4,
+  "category": "validation",
+  "description": "Duplicate segmentId in one bundle must fail validation.",
+  "requires": [
+    "validateEnvelope"
+  ],
+  "tags": [
+    "negative",
+    "segment-id"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "validateEnvelope"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

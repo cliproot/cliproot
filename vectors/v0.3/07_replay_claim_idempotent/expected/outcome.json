@@ -1,0 +1,32 @@
+{
+  "policyOutcome": "allow",
+  "receiptStatus": "accepted",
+  "reasonCodes": [
+    {
+      "code": "OK_IDEMPOTENT_REPLAY",
+      "scope": "receipt",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [
+      "paste"
+    ],
+    "claims": [
+      "transfer_claim"
+    ],
+    "receipts": [
+      "transfer_receipt"
+    ],
+    "decisions": [
+      "policy_decision"
+    ]
+  },
+  "auditEvents": [
+    {
+      "phase": "idempotency",
+      "status": "reused",
+      "reasonCode": "OK_IDEMPOTENT_REPLAY"
+    }
+  ]
+}

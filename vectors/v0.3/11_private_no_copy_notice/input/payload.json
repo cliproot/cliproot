@@ -1,0 +1,13 @@
+{
+  "segment": {
+    "segmentId": "seg_1",
+    "rights": {
+      "policyMode": "private_no_copy"
+    }
+  },
+  "copyControl": {
+    "onDenied": "replace_with_notice",
+    "noticeTemplate": "Reuse requires permission.",
+    "requestAccessUrl": "https://alice.example/request"
+  }
+}

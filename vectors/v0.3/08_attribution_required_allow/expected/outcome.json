@@ -1,0 +1,32 @@
+{
+  "policyOutcome": "allow_with_attribution",
+  "receiptStatus": "accepted_with_attribution_required",
+  "reasonCodes": [
+    {
+      "code": "OK_ATTRIBUTION_REQUIRED",
+      "scope": "policy",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [
+      "paste"
+    ],
+    "claims": [
+      "transfer_claim"
+    ],
+    "receipts": [
+      "transfer_receipt"
+    ],
+    "decisions": [
+      "policy_decision"
+    ]
+  },
+  "auditEvents": [
+    {
+      "phase": "policy_eval",
+      "status": "allow_with_attribution",
+      "reasonCode": "OK_ATTRIBUTION_REQUIRED"
+    }
+  ]
+}

@@ -12,6 +12,11 @@ Good contribution areas:
 - standards mapping analysis,
 - implementation notes that improve interoperability and safety.
 
+Conformance assets live at:
+- `vectors/v0.3`
+- `docs/conformance_vectors.md`
+- `docs/conformance_runner_contract.md`
+
 ## Before You Open a PR
 
 1. Open an issue first for substantial protocol changes.
@@ -25,6 +30,16 @@ Good contribution areas:
 3. Add or update test vectors if protocol semantics change.
 4. Include a brief risk note for security/privacy-sensitive changes.
 
+Helpful local checks:
+
+```bash
+python3 tools/conformance/validate_vectors.py --manifest vectors/v0.3/manifest.json
+python3 tools/conformance/generate_matrix.py \
+  --reports-root conformance_reports/v0.3 \
+  --manifest vectors/v0.3/manifest.json \
+  --output docs/conformance_matrix.md
+```
+
 ## Protocol Change Expectations
 
 For normative changes, include:
@@ -33,6 +48,10 @@ For normative changes, include:
 - backward compatibility notes,
 - conformance impact,
 - open questions.
+
+When protocol behavior changes, PRs should include one of:
+- corresponding vector updates, or
+- explicit rationale for why no vector delta is required.
 
 ## Commit and Review
 

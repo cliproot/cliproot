@@ -582,6 +582,10 @@ Receiver SHOULD validate:
 - Level 5 (`agent-aware tool governance`): enforce tool provenance contracts and policy decisions across MCP/WebMCP bindings.
 
 ## 24. Minimal Interop Test Vectors (v0.3)
+Publication baseline note:
+- Initial published conformance vector set (`vectors/v0.3`, manifest `0.3.0`) is scoped to Levels 1-4.
+- Level 5 WebMCP/tool-governance vectors are tracked as a follow-up `v0.3.x` vector release and are not initial merge-blocking gates.
+
 1. Single span, `open`, signed, accepted.
 2. `attribution_required` span accepted with attribution requirement.
 3. `permission_required` span with active grant accepted.
@@ -596,6 +600,10 @@ Receiver SHOULD validate:
 12. `permission_required` tool call without active grant -> `pending_owner_approval` or deny.
 13. Tool declared `readOnlyHint=true` attempts mutation -> reject and audit.
 14. SPA route change without context refresh -> stale `contextEpochId` rejected and retried.
+
+Vector semver policy:
+- Additive vectors and expectation clarifications use `v0.3.x`.
+- Breaking expectation changes require `v0.4.0`.
 
 ## 25. Conformance Tests: WebMCP Profile
 An implementation claiming `webmcp-imperative-v1` MUST pass:

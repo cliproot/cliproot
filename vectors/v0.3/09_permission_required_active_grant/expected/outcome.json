@@ -1,0 +1,32 @@
+{
+  "policyOutcome": "allow_with_attribution",
+  "receiptStatus": "accepted",
+  "reasonCodes": [
+    {
+      "code": "OK_ACTIVE_GRANT",
+      "scope": "policy",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [
+      "paste"
+    ],
+    "claims": [
+      "transfer_claim"
+    ],
+    "receipts": [
+      "transfer_receipt"
+    ],
+    "decisions": [
+      "policy_decision"
+    ]
+  },
+  "auditEvents": [
+    {
+      "phase": "policy_eval",
+      "status": "allow",
+      "reasonCode": "OK_ACTIVE_GRANT"
+    }
+  ]
+}

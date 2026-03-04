@@ -1,0 +1,30 @@
+{
+  "vectorId": "VEC_L1_OPEN_SIGNED_ACCEPTED",
+  "title": "Level 1 open policy accepted with signed envelope",
+  "level": 1,
+  "category": "import-only",
+  "description": "Valid signed envelope with open policy is parsed and accepted.",
+  "requires": [
+    "parseEnvelope",
+    "validateEnvelope"
+  ],
+  "tags": [
+    "positive",
+    "signed",
+    "clipboard"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "parseEnvelope",
+      "validateEnvelope"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

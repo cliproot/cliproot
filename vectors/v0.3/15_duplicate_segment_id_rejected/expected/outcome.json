@@ -1,0 +1,26 @@
+{
+  "policyOutcome": null,
+  "receiptStatus": "rejected_policy",
+  "reasonCodes": [
+    {
+      "code": "ERR_DUPLICATE_SEGMENT_ID",
+      "scope": "validation",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [],
+    "claims": [],
+    "receipts": [
+      "transfer_receipt"
+    ],
+    "decisions": []
+  },
+  "auditEvents": [
+    {
+      "phase": "validate",
+      "status": "rejected",
+      "reasonCode": "ERR_DUPLICATE_SEGMENT_ID"
+    }
+  ]
+}

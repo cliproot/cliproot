@@ -1,0 +1,36 @@
+{
+  "policyOutcome": "pending_owner_approval",
+  "receiptStatus": "pending_owner_approval",
+  "reasonCodes": [
+    {
+      "code": "WARN_MIXED_POLICY_PARTIAL_PENDING",
+      "scope": "bundle",
+      "mustExist": true
+    }
+  ],
+  "persistedArtifacts": {
+    "activities": [
+      "paste"
+    ],
+    "claims": [
+      "transfer_claim:https://a.example",
+      "transfer_claim:https://b.example"
+    ],
+    "receipts": [
+      "transfer_receipt:https://a.example",
+      "transfer_receipt:https://b.example"
+    ],
+    "decisions": [
+      "policy_decision:seg_a",
+      "policy_decision:seg_b",
+      "policy_decision:seg_c"
+    ]
+  },
+  "auditEvents": [
+    {
+      "phase": "policy_eval",
+      "status": "mixed_pending",
+      "reasonCode": "WARN_MIXED_POLICY_PARTIAL_PENDING"
+    }
+  ]
+}

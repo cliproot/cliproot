@@ -16,5 +16,9 @@ labels: protocol
 ## Affected Versions/Profiles
 
 ## Conformance / Test Vector Updates
+- [ ] Required
+- [ ] Not required (include rationale)
+
+Reason code / expected outcome impact:
 
 ## Open Questions

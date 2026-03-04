@@ -1,0 +1,31 @@
+{
+  "vectorId": "VEC_L4_GRANT_EXPIRED_REJECTED",
+  "title": "Level 4 stale grant window rejected",
+  "level": 4,
+  "category": "rights-aware-enforcement",
+  "description": "Grant with now >= expiresAt must be rejected as stale.",
+  "requires": [
+    "validateEnvelope",
+    "evaluatePolicy",
+    "processTransferClaim"
+  ],
+  "tags": [
+    "policy",
+    "grant-expired"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "validateEnvelope",
+      "evaluatePolicy",
+      "processTransferClaim"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

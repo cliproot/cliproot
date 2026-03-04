@@ -1,0 +1,23 @@
+{
+  "protocol": "spx-prov",
+  "version": "0.3",
+  "bundleId": "01JBASE0001",
+  "sourceInstance": "https://alice.example",
+  "segments": [
+    {
+      "segmentId": "seg_1",
+      "order": 0,
+      "text": "Quoted sentence A.",
+      "entityId": "ent_a1",
+      "textHash": "sha256:1111",
+      "rights": {
+        "policyMode": "open"
+      }
+    }
+  ],
+  "signature": {
+    "alg": "Ed25519",
+    "kid": "did:key:zalice#k1",
+    "sig": "base64-valid"
+  }
+}

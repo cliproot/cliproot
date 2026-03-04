@@ -1,0 +1,29 @@
+{
+  "vectorId": "VEC_L1_MALFORMED_ENVELOPE_REJECTED",
+  "title": "Level 1 malformed envelope rejected",
+  "level": 1,
+  "category": "import-only",
+  "description": "Envelope missing required version field must be rejected.",
+  "requires": [
+    "parseEnvelope",
+    "validateEnvelope"
+  ],
+  "tags": [
+    "negative",
+    "schema"
+  ],
+  "status": "active",
+  "introducedIn": "0.3.0",
+  "updatedIn": "0.3.0",
+  "runner": {
+    "clock": "2026-03-01T12:00:00Z",
+    "operations": [
+      "parseEnvelope",
+      "validateEnvelope"
+    ],
+    "inputFiles": {
+      "payload": "input/payload.json"
+    },
+    "expectedFile": "expected/outcome.json"
+  }
+}

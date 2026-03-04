@@ -14,6 +14,11 @@ labels: enhancement
 - [ ] Sample app implementation
 - [ ] Conformance/test vectors
 
+## Suggested Labels
+- [ ] `conformance`
+- [ ] `protocol`
+- [ ] `libraries`
+
 ## Proposed Approach
 
 ## Acceptance Criteria

@@ -1,0 +1,17 @@
+{
+  "protocol": "spx-prov",
+  "version": "0.2",
+  "bundleId": "01JBASE0019",
+  "sourceInstance": "https://alice.example",
+  "segments": [
+    {
+      "segmentId": "seg_1",
+      "order": 0,
+      "text": "v0.2 content",
+      "entityId": "ent_v02_1",
+      "rights": {
+        "policyMode": "open"
+      }
+    }
+  ]
+}

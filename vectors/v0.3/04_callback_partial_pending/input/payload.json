@@ -1,0 +1,36 @@
+{
+  "protocol": "spx-prov",
+  "version": "0.3",
+  "bundleId": "01JBASE0004",
+  "segments": [
+    {
+      "segmentId": "seg_a",
+      "order": 0,
+      "sourceInstance": "https://a.example",
+      "text": "A",
+      "textHash": "sha256:a",
+      "rights": {
+        "policyMode": "open"
+      }
+    },
+    {
+      "segmentId": "seg_b",
+      "order": 1,
+      "sourceInstance": "https://b.example",
+      "text": "B",
+      "textHash": "sha256:b",
+      "rights": {
+        "policyMode": "open"
+      }
+    }
+  ],
+  "callbacks": {
+    "https://a.example": {
+      "status": "accepted"
+    },
+    "https://b.example": {
+      "status": "pending_async",
+      "error": "timeout"
+    }
+  }
+}
