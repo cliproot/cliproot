@@ -3,7 +3,7 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import * as addFormatsPlugin from 'ajv-formats';
 
 import { CRP_V0_0_1_SCHEMA } from './schema.js';
-import type { SppBundle } from './types.js';
+import type { CrpBundle } from './types.js';
 
 export interface ValidationIssue {
   instancePath: string;
@@ -24,15 +24,18 @@ export interface ValidationFailure {
 
 export type ValidationResult<T> = ValidationSuccess<T> | ValidationFailure;
 
-export class SppValidationError extends Error {
+export class CrpValidationError extends Error {
   issues: ValidationIssue[];
 
   constructor(issues: ValidationIssue[], message = 'CRP bundle validation failed.') {
     super(message);
-    this.name = 'SppValidationError';
+    this.name = 'CrpValidationError';
     this.issues = issues;
   }
 }
+
+/** @deprecated Use `CrpValidationError`. */
+export class SppValidationError extends CrpValidationError {}
 
 const ajv = new Ajv2020({
   strict: true,
@@ -73,13 +76,13 @@ function collectIssues(errors: ErrorObject[] | null | undefined): ValidationIssu
   return (errors ?? []).map(toValidationIssue);
 }
 
-export function validateBundle(input: unknown): ValidationResult<SppBundle> {
+export function validateBundle(input: unknown): ValidationResult<CrpBundle> {
   const valid = validateCompiled(input);
 
   if (valid) {
     return {
       ok: true,
-      value: input as SppBundle,
+      value: input as CrpBundle,
     };
   }
 
@@ -89,10 +92,10 @@ export function validateBundle(input: unknown): ValidationResult<SppBundle> {
   };
 }
 
-export function parseBundle(input: unknown): SppBundle {
+export function parseBundle(input: unknown): CrpBundle {
   const result = validateBundle(input);
   if (!result.ok) {
-    throw new SppValidationError(result.errors);
+    throw new CrpValidationError(result.errors);
   }
 
   return result.value;

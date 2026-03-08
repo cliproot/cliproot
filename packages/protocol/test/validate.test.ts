@@ -4,17 +4,17 @@ import {
   ACTIVITY_TYPES,
   AGENT_TYPES,
   BUNDLE_TYPES,
+  CrpValidationError,
   SOURCE_TYPES,
   parseBundle,
   CRP_V0_0_1_SCHEMA,
-  SppValidationError,
   validateBundle,
 } from '../src/index.js';
-import type { SppBundle } from '../src/types.js';
+import type { CrpBundle } from '../src/types.js';
 
-function readFixture(): SppBundle {
+function readFixture(): CrpBundle {
   const fixtureUrl = new URL('../schema/examples/crp-v0.0.1.document.example.json', import.meta.url);
-  return JSON.parse(readFileSync(fixtureUrl, 'utf8')) as SppBundle;
+  return JSON.parse(readFileSync(fixtureUrl, 'utf8')) as CrpBundle;
 }
 
 describe('validateBundle', () => {
@@ -84,13 +84,13 @@ describe('validateBundle', () => {
     const bundle = readFixture();
     const result = validateBundle({
       ...bundle,
-      spans: bundle.spans?.map((span, index) =>
+      clips: bundle.clips?.map((clip, index) =>
         index === 0
           ? {
-              ...span,
+              ...clip,
               textHash: 'not-a-sha256-hash',
             }
-          : span,
+          : clip,
       ),
     });
 
@@ -148,21 +148,21 @@ describe('validateBundle', () => {
     expect(result.errors.some((issue) => issue.instancePath.endsWith('/activityType'))).toBe(true);
   });
 
-  it('rejects spans missing textQuote selector and empty sourceRefs', () => {
+  it('rejects clips missing textQuote selector and empty sourceRefs', () => {
     const bundle = readFixture();
-    const firstSpan = bundle.spans?.[0];
-    if (!firstSpan) {
-      throw new Error('Fixture missing first span.');
+    const firstClip = bundle.clips?.[0];
+    if (!firstClip) {
+      throw new Error('Fixture missing first clip.');
     }
 
     const result = validateBundle({
       ...bundle,
-      spans: [
+      clips: [
         {
-          ...firstSpan,
+          ...firstClip,
           sourceRefs: [],
           selectors: {
-            textPosition: firstSpan.selectors.textPosition,
+            textPosition: firstClip.selectors.textPosition,
           },
         },
       ],
@@ -186,7 +186,7 @@ describe('parseBundle', () => {
     expect(parsed.bundleType).toBe('document');
   });
 
-  it('throws SppValidationError with issue details for invalid input', () => {
+  it('throws CrpValidationError with issue details for invalid input', () => {
     const invalid = {
       protocolVersion: '0.0.1',
       bundleType: 'invalid',
@@ -203,8 +203,8 @@ describe('parseBundle', () => {
       parseBundle(invalid);
       throw new Error('Expected parseBundle to throw.');
     } catch (error) {
-      expect(error).toBeInstanceOf(SppValidationError);
-      const typed = error as SppValidationError;
+      expect(error).toBeInstanceOf(CrpValidationError);
+      const typed = error as CrpValidationError;
       expect(typed.issues).toEqual(validateResult.errors);
     }
   });

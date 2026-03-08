@@ -37,10 +37,10 @@
       },
       "default": []
     },
-    "spans": {
+    "clips": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/span"
+        "$ref": "#/$defs/clip"
       },
       "default": []
     },
@@ -214,7 +214,54 @@
         "exact"
       ]
     },
-    "span": {
+    "domSelector": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provenanceAttribute": {
+          "type": "string"
+        },
+        "elementId": {
+          "type": "string"
+        },
+        "cssSelector": {
+          "type": "string"
+        },
+        "classPath": {
+          "type": "string"
+        }
+      },
+      "minProperties": 1
+    },
+    "mediaTimeSelector": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "startMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "endMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "track": {
+          "type": "string",
+          "enum": [
+            "audio",
+            "video"
+          ]
+        },
+        "transcriptCueId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "startMs",
+        "endMs"
+      ]
+    },
+    "clip": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -244,6 +291,12 @@
             },
             "editorPath": {
               "type": "string"
+            },
+            "dom": {
+              "$ref": "#/$defs/domSelector"
+            },
+            "mediaTime": {
+              "$ref": "#/$defs/mediaTimeSelector"
             }
           },
           "required": [
@@ -294,7 +347,7 @@
           },
           "uniqueItems": true
         },
-        "generatedSpanRefs": {
+        "generatedClipRefs": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/id"

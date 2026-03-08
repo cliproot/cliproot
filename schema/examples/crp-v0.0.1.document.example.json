@@ -25,9 +25,9 @@
       "createdAt": "2026-03-07T20:00:00Z"
     }
   ],
-  "spans": [
+  "clips": [
     {
-      "id": "span_01",
+      "id": "clip_01",
       "documentId": "doc_01",
       "sourceRefs": [
         "src_01"
@@ -40,7 +40,11 @@
         "textQuote": {
           "exact": "Provenance starts here."
         },
-        "editorPath": "0/0/0"
+        "editorPath": "0/0/0",
+        "dom": {
+          "elementId": "paragraph-1",
+          "classPath": "article-body p.lede"
+        }
       },
       "textHash": "sha256-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
       "createdByActivityId": "act_01"
@@ -54,8 +58,8 @@
       "usedSourceRefs": [
         "src_01"
       ],
-      "generatedSpanRefs": [
-        "span_01"
+      "generatedClipRefs": [
+        "clip_01"
       ],
       "createdAt": "2026-03-07T20:01:00Z"
     }
