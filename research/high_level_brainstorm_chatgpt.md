@@ -8,11 +8,11 @@
 
 This POC is:
 
-- 🌍 **Cloud-based and public-facing** (broad audience)
-- 🔐 Authenticated (users have identity)
-- 🗄️ Backed by a database (durable provenance + attribution graph)
-- 🎨 Focused on visualizing attribution clearly
-- 🤝 Designed to demonstrate a "handshake" model between content source and destination
+* 🌍 **Cloud-based and public-facing** (broad audience)
+* 🔐 Authenticated (users have identity)
+* 🗄️ Backed by a database (durable provenance + attribution graph)
+* 🎨 Focused on visualizing attribution clearly
+* 🤝 Designed to demonstrate a "handshake" model between content source and destination
 
 Collaboration (Yjs real-time CRDT) becomes a *later phase* after provenance + identity + handshake model are solid.
 
@@ -22,17 +22,17 @@ Collaboration (Yjs real-time CRDT) becomes a *later phase* after provenance + id
 
 ## Frontend
 
-- **Next.js (App Router)**
-- **React**
-- **Tiptap** (ProseMirror-based editor)
-- Hosted on **Vercel**
+* **Next.js (App Router)**
+* **React**
+* **Tiptap** (ProseMirror-based editor)
+* Hosted on **Vercel**
 
 ## Backend (within Next.js)
 
-- Route handlers / server actions
-- Database via **Drizzle ORM**
-- Auth via **BetterAuth**
-- PostgreSQL (Neon, Supabase, or Vercel Postgres)
+* Route handlers / server actions
+* Database via **Drizzle ORM**
+* Auth via **BetterAuth**
+* PostgreSQL (Neon, Supabase, or Vercel Postgres)
 
 ## Core Architectural Shift
 
@@ -50,16 +50,16 @@ Since this is cloud-based:
 
 Every attribution is tied to:
 
-- A verified user (author)
-- Or a declared external source
-- Or a declared AI system
+* A verified user (author)
+* Or a declared external source
+* Or a declared AI system
 
 This enables:
 
-- Public author profiles
-- Traceability
-- Cross-document attribution graphs
-- Source-side tracking dashboards
+* Public author profiles
+* Traceability
+* Cross-document attribution graphs
+* Source-side tracking dashboards
 
 ---
 
@@ -124,8 +124,8 @@ The Tiptap mark only contains `provenanceId`.
 
 This allows:
 
-- Rebuilding attribution graph server-side
-- Querying: "Where has this source been reused?"
+* Rebuilding attribution graph server-side
+* Querying: "Where has this source been reused?"
 
 ---
 
@@ -135,7 +135,7 @@ This allows:
 
 Mark attributes:
 
-- provenanceId
+* provenanceId
 
 HTML serialization:
 
@@ -145,8 +145,8 @@ HTML serialization:
 
 On save:
 
-- Editor JSON is stored in `documents.content`
-- Span positions extracted and synced to `span_attributions`
+* Editor JSON is stored in `documents.content`
+* Span positions extracted and synced to `span_attributions`
 
 ---
 
@@ -156,20 +156,20 @@ This POC should feel visually striking.
 
 ### Styling Modes
 
-- 🔴 Human original author → red underline
-- 🟣 AI generated → dashed underline + AI badge
-- 🔵 External source → blue left border or quote styling
-- ⚪ Unattributed → yellow highlight until resolved
+* 🔴 Human original author → red underline
+* 🟣 AI generated → dashed underline + AI badge
+* 🔵 External source → blue left border or quote styling
+* ⚪ Unattributed → yellow highlight until resolved
 
 ### Attribution Inspector Panel
 
 Click a span → shows:
 
-- Author (linked profile)
-- Source document
-- Source URL
-- "View all uses of this content"
-- Provenance chain
+* Author (linked profile)
+* Source document
+* Source URL
+* "View all uses of this content"
+* Provenance chain
 
 ---
 
@@ -181,8 +181,7 @@ This is the most important conceptual addition.
 
 Current attribution is one-directional:
 
-Destination cites source.
-Source has no awareness.
+Destination cites source. Source has no awareness.
 
 ## Proposed Model
 
@@ -209,7 +208,6 @@ reuse_events
 - timestamp
 - acknowledged (boolean)
 - acknowledgementSignature
-```
 ```
 
 This enables:
@@ -248,7 +246,9 @@ Because this is broad-audience:
 Each provenance record gets a public page:
 
 ```
-/provenance/prov_xxx
+
+/cliproot/prov_xxx
+
 ```
 
 Shows:
@@ -370,3 +370,196 @@ If you'd like, I can now:
 
 Tell me which layer you want to design first.
 
+
+---
+
+# 13. Reference Implementation: Tiptap Attribution Extension (Framework Agnostic)
+
+This section sketches a minimal but functional implementation of the attribution system as a reusable Tiptap extension. The goal is to keep all persistence and networking concerns outside the editor.
+
+## Package
+
+```
+
+@cliproot/tiptap
+
+````
+
+## Extension Responsibilities
+
+The extension should:
+
+1. Define the attribution mark
+2. Preserve provenance IDs in HTML
+3. Intercept copy operations
+4. Intercept paste operations
+5. Emit events/hooks for the host application
+
+---
+
+## Extension Skeleton
+
+```ts
+import { Mark, mergeAttributes } from '@tiptap/core'
+
+export interface AttributionOptions {
+  resolveProvenance?: (id: string) => Promise<any>
+  storeProvenance?: (prov: any) => Promise<string>
+  onReuseDetected?: (event: any) => void
+}
+
+export const AttributionExtension = Mark.create<AttributionOptions>({
+
+  name: 'attribution',
+
+  addOptions() {
+    return {}
+  },
+
+  addAttributes() {
+    return {
+      provId: {
+        default: null,
+        parseHTML: element => element.getAttribute('data-prov-id'),
+        renderHTML: attributes => {
+          if (!attributes.provId) return {}
+
+          return {
+            'data-prov-id': attributes.provId
+          }
+        }
+      }
+    }
+  },
+
+  parseHTML() {
+    return [
+      {
+        tag: 'span[data-prov-id]'
+      }
+    ]
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ['span', mergeAttributes(HTMLAttributes), 0]
+  }
+
+})
+````
+
+---
+
+## Copy Interceptor
+
+Attach a ProseMirror plugin to add provenance metadata to the clipboard.
+
+```ts
+handleCopy(view, event) {
+
+  const { state } = view
+  const { from, to } = state.selection
+
+  const slice = state.doc.slice(from, to)
+
+  const provenance = []
+
+  slice.content.descendants(node => {
+    node.marks.forEach(mark => {
+      if (mark.type.name === 'attribution') {
+        provenance.push(mark.attrs.provId)
+      }
+    })
+  })
+
+  const payload = {
+    version: 1,
+    provenance
+  }
+
+  event.clipboardData.setData(
+    'application/x-provenance+json',
+    JSON.stringify(payload)
+  )
+
+  return false
+}
+```
+
+---
+
+## Paste Interceptor
+
+```ts
+handlePaste(view, event) {
+
+  const data = event.clipboardData.getData(
+    'application/x-provenance+json'
+  )
+
+  if (!data) return false
+
+  const payload = JSON.parse(data)
+
+  payload.provenance.forEach(provId => {
+
+    if (this.options.onReuseDetected) {
+      this.options.onReuseDetected({
+        provenanceId: provId
+      })
+    }
+
+  })
+
+  return false
+}
+```
+
+---
+
+## Commands
+
+Provide commands so host apps can add attribution.
+
+```ts
+addCommands() {
+  return {
+
+    setAttribution:
+      (provId: string) =>
+      ({ commands }) => {
+        return commands.setMark('attribution', { provId })
+      },
+
+    unsetAttribution:
+      () =>
+      ({ commands }) => {
+        return commands.unsetMark('attribution')
+      }
+
+  }
+}
+```
+
+---
+
+## Example Usage (React, Vue, etc.)
+
+Because the extension has no framework dependency, it works the same everywhere.
+
+```ts
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+import { AttributionExtension } from '@cliproot/tiptap'
+
+const editor = new Editor({
+  extensions: [
+    StarterKit,
+
+    AttributionExtension.configure({
+
+      resolveProvenance: async (id) => {
+        return fetch(`/api/cliproot/${id}`)
+      },
+
+      onReuseDetected: async (event) 
+```

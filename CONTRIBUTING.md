@@ -1,10 +1,10 @@
 # Contributing
 
-Thanks for your interest in improving Provenance.
+Thanks for your interest in improving ClipRoot.
 
 ## Scope
 
-This repository currently focuses on protocol and research drafts for `spx-prov`.
+This repository currently focuses on protocol and research drafts for `crp`.
 
 Good contribution areas:
 - protocol clarification and normative language improvements,
