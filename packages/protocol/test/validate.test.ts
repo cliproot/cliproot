@@ -281,9 +281,7 @@ describe('validateBundle', () => {
       clips: [
         {
           ...firstClip,
-          derivedFrom: [
-            { clipHash: 'sha256-ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ' }
-          ]
+          derivedFrom: [{ clipHash: 'sha256-ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ' }]
         }
       ]
     })
@@ -313,9 +311,7 @@ describe('validateBundle', () => {
       return
     }
 
-    expect(
-      result.errors.some((issue) => issue.instancePath.includes('derivedFrom'))
-    ).toBe(true)
+    expect(result.errors.some((issue) => issue.instancePath.includes('derivedFrom'))).toBe(true)
   })
 
   // --- Hybrid model: optional registry ---
