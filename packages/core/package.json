@@ -1,0 +1,40 @@
+{
+  "name": "@cliproot/core",
+  "version": "0.0.1",
+  "description": "Core SDK for capturing clipboard provenance with CRP",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "lint": "pnpm run typecheck"
+  },
+  "dependencies": {
+    "@cliproot/protocol": "workspace:*",
+    "@noble/hashes": "1.8.0"
+  },
+  "devDependencies": {
+    "happy-dom": "^17.4.4",
+    "typescript": "5.7.3",
+    "vitest": "3.0.5"
+  }
+}

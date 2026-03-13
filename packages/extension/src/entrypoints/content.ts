@@ -1,0 +1,124 @@
+import { captureSelection, buildClipboardBundle, writeProvenanceToClipboard } from '@cliproot/core'
+import type { CapturedSelection } from '@cliproot/core'
+import type { CrpBundle } from '@cliproot/protocol'
+
+export default defineContentScript({
+  matches: ['<all_urls>'],
+  runAt: 'document_start',
+  main() {
+    let enabled = true
+    let pendingCapture: { captured: CapturedSelection; bundle: CrpBundle } | null = null
+    let bubbleListenerFired = false
+
+    // Sync enabled state from storage
+    chrome.storage.local.get('enabled', (result: Record<string, unknown>) => {
+      enabled = result.enabled !== false // default true
+    })
+
+    chrome.storage.onChanged.addListener((changes: Record<string, chrome.storage.StorageChange>) => {
+      if (changes.enabled) {
+        enabled = changes.enabled.newValue !== false
+      }
+    })
+
+    // Phase 1: Capture-phase listener — snapshot selection, build bundle, do NOT preventDefault
+    document.addEventListener(
+      'copy',
+      (event: ClipboardEvent) => {
+        if (!enabled) return
+
+        bubbleListenerFired = false
+        pendingCapture = null
+
+        const selection = document.getSelection()
+        if (!selection || selection.isCollapsed) return
+
+        const captured = captureSelection(selection, document)
+        if (!captured) return
+
+        const documentInfo: { uri: string; title?: string | undefined } = {
+          uri: window.location.href,
+        }
+        if (document.title) {
+          documentInfo.title = document.title
+        }
+
+        const bundle = buildClipboardBundle({
+          captured,
+          documentInfo,
+        })
+
+        pendingCapture = { captured, bundle }
+        // Do NOT call event.preventDefault() — let the site handle the copy
+      },
+      { capture: true }
+    )
+
+    // Phase 2: Bubble-phase listener — augment whatever the site wrote with provenance
+    document.addEventListener(
+      'copy',
+      (event: ClipboardEvent) => {
+        if (!enabled || !pendingCapture || !event.clipboardData) return
+
+        bubbleListenerFired = true
+
+        writeProvenanceToClipboard(pendingCapture.bundle, event.clipboardData)
+        event.preventDefault()
+
+        pendingCapture = null
+      },
+      { capture: false }
+    )
+
+    // Phase 3: Fallback — if bubble listener never fired (site called stopImmediatePropagation),
+    // use setTimeout + Async Clipboard API as best-effort fallback
+    document.addEventListener(
+      'copy',
+      () => {
+        if (!enabled || !pendingCapture) return
+
+        const bundle = pendingCapture.bundle
+
+        setTimeout(async () => {
+          if (bubbleListenerFired) return
+
+          try {
+            const [existing] = await navigator.clipboard.read()
+            if (!existing) return
+
+            const htmlBlob = existing.types.includes('text/html')
+              ? await existing.getType('text/html')
+              : null
+
+            const existingHtml = htmlBlob ? await htmlBlob.text() : ''
+            const bundleJson = JSON.stringify(bundle)
+            const provenanceHtml = `<div style="display:none" data-crp-bundle="${escapeAttr(bundleJson)}"></div>`
+            const finalHtml = existingHtml + provenanceHtml
+
+            const textBlob = existing.types.includes('text/plain')
+              ? await existing.getType('text/plain')
+              : new Blob([''], { type: 'text/plain' })
+
+            await navigator.clipboard.write([
+              new ClipboardItem({
+                'text/plain': textBlob,
+                'text/html': new Blob([finalHtml], { type: 'text/html' }),
+              }),
+            ])
+          } catch {
+            // Best-effort — async clipboard API may not be available
+          }
+        }, 0)
+      },
+      { capture: true }
+    )
+  },
+})
+
+function escapeAttr(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}

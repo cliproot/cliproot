@@ -11,10 +11,10 @@ This repository is the public ClipRoot monorepo.
 It currently includes:
 - the CRP (`ClipRoot Protocol`) `v0.0.1` schema and research artifacts,
 - `@cliproot/protocol`, a TypeScript package for schema-backed validation, generated protocol types, and deterministic text hashing,
+- `@cliproot/core`, a browser-compatible SDK for capturing clipboard provenance on copy events,
 - `@cliproot/tiptap`, a Tiptap extension for managing span-level provenance and attribution,
+- `@cliproot/extension`, a WXT-based Chrome extension that intercepts copy events and writes CRP bundles,
 - monorepo tooling for building and testing public SDK packages.
-
-Planned next packages include editor and handshake-focused SDKs (see `research/high_level_plan_march_7_2026.md`).
 
 ## Protocol Overview
 
@@ -39,11 +39,66 @@ The generated schema constants and types are available in:
 ```text
 cliproot/
   packages/
-    protocol/      # @cliproot/protocol
-    tiptap/        # @cliproot/tiptap
+    protocol/      # @cliproot/protocol — schema validation, types, hashing
+    core/          # @cliproot/core     — browser SDK for copy-side provenance capture
+    tiptap/        # @cliproot/tiptap   — Tiptap attribution extension
+    extension/     # @cliproot/extension — Chrome extension (WXT, MV3)
   schema/          # canonical schema artifacts and examples
   research/        # product/protocol planning notes
 ```
+
+### Using `@cliproot/core`
+
+`@cliproot/core` provides a browser-compatible API for capturing what was selected at the moment of a copy, building a CRP clipboard bundle, and writing it invisibly into the HTML clipboard data.
+
+```ts
+import {
+  captureSelection,
+  buildClipboardBundle,
+  writeProvenanceToClipboard,
+} from '@cliproot/core'
+
+document.addEventListener('copy', (event) => {
+  const selection = document.getSelection()
+  if (!selection || !event.clipboardData) return
+
+  const captured = captureSelection(selection, document)
+  if (!captured) return
+
+  const bundle = buildClipboardBundle({
+    captured,
+    documentInfo: {
+      uri: window.location.href,
+      title: document.title,
+    },
+  })
+
+  writeProvenanceToClipboard(bundle, event.clipboardData)
+  event.preventDefault()
+})
+```
+
+The bundle is written as a hidden `<div data-crp-bundle="...">` appended to the `text/html` clipboard entry. Plain text is left unmodified. On paste, a CRP-aware receiver can parse the attribute to reconstruct the clip's provenance.
+
+### Using `@cliproot/extension`
+
+The Chrome extension automates the above for every page without requiring site-side integration.
+
+**Development:**
+
+```bash
+pnpm --filter @cliproot/extension dev
+```
+
+Load the `.output/chrome-mv3/` directory in Chrome via **Settings → Extensions → Load unpacked**.
+
+**How it works:**
+
+1. A capture-phase copy listener snapshots the selection and builds a CRP bundle before the site's handler runs.
+2. A bubble-phase listener augments whatever HTML the site wrote with the hidden provenance div, then calls `preventDefault()`.
+3. If the site suppressed bubbling (`stopImmediatePropagation`), a best-effort fallback uses the Async Clipboard API.
+
+**Toggle:** Click the extension icon to open the popup and enable/disable capture. The badge shows `ON` (green) or `OFF` (gray).
 
 ### Using `@cliproot/tiptap`
 
@@ -92,7 +147,9 @@ This runs Turborepo build tasks across workspace packages.
 
 ```bash
 pnpm --filter @cliproot/protocol build
+pnpm --filter @cliproot/core build
 pnpm --filter @cliproot/tiptap build
+pnpm --filter @cliproot/extension build
 ```
 
 ## Run Typecheck and Tests
@@ -109,9 +166,16 @@ Or target specific packages:
 pnpm --filter @cliproot/protocol typecheck
 pnpm --filter @cliproot/protocol test
 
+# Core SDK
+pnpm --filter @cliproot/core typecheck
+pnpm --filter @cliproot/core test
+
 # Tiptap package
 pnpm --filter @cliproot/tiptap typecheck
 pnpm --filter @cliproot/tiptap test
+
+# Extension (typecheck only — no unit tests)
+pnpm --filter @cliproot/extension typecheck
 ```
 
 ## Formatting
