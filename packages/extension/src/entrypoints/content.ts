@@ -62,6 +62,12 @@ export default defineContentScript({
 
         bubbleListenerFired = true
 
+        // If no site handler set plain text, seed it from our captured text so
+        // clipboard-writer can build HTML from it and text/plain is preserved.
+        if (!event.clipboardData.getData('text/plain') && pendingCapture.captured.text) {
+          event.clipboardData.setData('text/plain', pendingCapture.captured.text)
+        }
+
         writeProvenanceToClipboard(pendingCapture.bundle, event.clipboardData)
         event.preventDefault()
 
