@@ -7,6 +7,7 @@ import {
   type MergedState,
   type ResolvedAgent,
   type ResolvedActivity,
+  type ResolvedDocument,
   type ResolvedSource
 } from '../lib/bundle-merge'
 
@@ -20,6 +21,7 @@ interface BundleStore {
   agents: Map<string, ResolvedAgent>
   sources: Map<string, ResolvedSource>
   activities: Map<string, ResolvedActivity>
+  documents: Map<string, ResolvedDocument>
 
   /** Currently selected clip hash */
   selectedClipHash: string | null
@@ -42,7 +44,8 @@ function emptyMerged(): MergedState {
     edges: [],
     agents: new Map(),
     sources: new Map(),
-    activities: new Map()
+    activities: new Map(),
+    documents: new Map()
   }
 }
 

@@ -3,7 +3,8 @@ import {
   buildClipboardBundle,
   writeProvenanceToClipboard,
   writeCustomFormatToClipboard,
-  parseBundleFromHtml
+  parseBundleFromHtml,
+  escapeAttr
 } from '@cliproot/core'
 import type { CapturedSelection } from '@cliproot/core'
 import { createTextHash } from '@cliproot/protocol/hash'
@@ -211,11 +212,3 @@ export default defineContentScript({
     )
   }
 })
-
-function escapeAttr(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-}

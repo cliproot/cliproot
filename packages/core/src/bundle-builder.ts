@@ -85,7 +85,9 @@ export function buildClipboardBundle(params: {
     sources: [
       {
         id: sourceId,
-        sourceType: 'unknown'
+        sourceType: 'unknown',
+        sourceUri: documentInfo.uri,
+        ...(documentInfo.title ? { title: documentInfo.title } : {})
       }
     ],
     clips: [clip],

@@ -82,6 +82,28 @@ export function ClipDetail() {
         </Section>
       )}
 
+      {/* Document */}
+      {clip.document && (
+        <Section title="Document">
+          <div className="rounded bg-gray-800/50 p-2 text-sm space-y-1">
+            {clip.document.title && <p className="text-gray-300">{clip.document.title}</p>}
+            {clip.document.uri && (
+              <a
+                href={clip.document.uri}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block truncate text-blue-400 hover:underline"
+              >
+                {clip.document.uri}
+              </a>
+            )}
+            <p className="text-gray-600 text-xs">
+              ID: <code>{clip.document.id}</code>
+            </p>
+          </div>
+        </Section>
+      )}
+
       {/* Sources */}
       {clip.resolvedSources.length > 0 && (
         <Section title="Sources">

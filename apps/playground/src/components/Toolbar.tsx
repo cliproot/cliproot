@@ -2,11 +2,7 @@ import { useRef, useState } from 'react'
 import type { CrpBundle } from '@cliproot/protocol'
 import { validateBundle } from '@cliproot/protocol'
 import { useBundleStore } from '../hooks/useBundleStore'
-import {
-  isClipboardReadSupported,
-  readCliprootFromClipboard,
-  readCliprootFromPasteEvent
-} from '../lib/clipboard-read'
+import { readCliprootFromPasteEvent } from '../lib/clipboard-read'
 import { isFsaSupported, openCliprootDirectory, readBundlesFromFileList } from '../lib/fsa-reader'
 
 export function Toolbar() {
@@ -18,16 +14,6 @@ export function Toolbar() {
 
   const uploadRef = useRef<HTMLInputElement>(null)
   const folderRef = useRef<HTMLInputElement>(null)
-
-  const handlePaste = async () => {
-    setError(null)
-    const result = await readCliprootFromClipboard()
-    if (result.bundle) {
-      addBundle(`clipboard-${Date.now()}`, result.bundle)
-    } else if (result.error) {
-      setError(result.error)
-    }
-  }
 
   const handlePasteEvent = (e: React.ClipboardEvent) => {
     e.preventDefault()
@@ -96,15 +82,6 @@ export function Toolbar() {
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
-        {isClipboardReadSupported() && (
-          <button
-            onClick={handlePaste}
-            className="rounded bg-indigo-600 px-3 py-1.5 text-sm font-medium hover:bg-indigo-500 transition-colors"
-          >
-            Paste Clip
-          </button>
-        )}
-
         {isFsaSupported() ? (
           <button
             onClick={handleOpenFolder}
@@ -156,16 +133,19 @@ export function Toolbar() {
         )}
       </div>
 
-      <div
-        contentEditable
-        onPaste={handlePasteEvent}
-        onBeforeInput={(e) => e.preventDefault()}
-        className="rounded border border-dashed border-gray-600 px-3 py-2 text-sm text-gray-400 focus:border-indigo-500 focus:outline-none cursor-text"
-        role="textbox"
-        aria-label="Paste area"
-        suppressContentEditableWarning
-      >
-        Paste here (Ctrl+V) — no permission needed
+      <div className="relative rounded border border-dashed border-gray-600 focus-within:border-indigo-500">
+        <div
+          contentEditable
+          onPaste={handlePasteEvent}
+          onBeforeInput={(e) => e.preventDefault()}
+          className="px-3 py-2 text-sm focus:outline-none cursor-text min-h-8"
+          role="textbox"
+          aria-label="Paste area"
+          suppressContentEditableWarning
+        />
+        <span className="absolute inset-0 flex items-center px-3 py-2 text-sm text-gray-400 pointer-events-none select-none">
+          Paste here (Ctrl+V)
+        </span>
       </div>
 
       {error && (

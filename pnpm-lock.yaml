@@ -20,6 +20,9 @@ importers:
 
   apps/playground:
     dependencies:
+      '@cliproot/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@cliproot/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol

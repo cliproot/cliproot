@@ -10,16 +10,30 @@ import type { CrpBundle } from '@cliproot/protocol/types'
  */
 export function parseBundleFromHtml(html: string): CrpBundle | null {
   try {
-    const match = html.match(/data-crp-bundle="([^"]*)"/)
-    if (!match) return null
+    // Try DOMParser first — it handles entity decoding automatically and
+    // works reliably when the Async Clipboard API returns DOM-parsed HTML
+    // where &quot; has already been resolved to literal " characters.
+    let bundleJson: string | null = null
 
-    const decoded = (match[1] ?? '')
-      .replace(/&amp;/g, '&')
-      .replace(/&quot;/g, '"')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
+    if (typeof DOMParser !== 'undefined') {
+      const doc = new DOMParser().parseFromString(html, 'text/html')
+      const el = doc.querySelector('[data-crp-bundle]')
+      bundleJson = el?.getAttribute('data-crp-bundle') ?? null
+    }
 
-    const parsed = JSON.parse(decoded)
+    // Regex fallback for environments without DOMParser (e.g. Node/tests).
+    // Only works when attribute entities are still encoded (raw HTML).
+    if (!bundleJson) {
+      const match = html.match(/data-crp-bundle="([^"]*)"/)
+      if (!match) return null
+      bundleJson = (match[1] ?? '')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+    }
+
+    const parsed = JSON.parse(bundleJson)
 
     // Lightweight structural check — the data was written by our own
     // extension so full schema validation is unnecessary, and AJV's
@@ -28,7 +42,7 @@ export function parseBundleFromHtml(html: string): CrpBundle | null {
     if (
       parsed &&
       typeof parsed === 'object' &&
-      typeof parsed.crpiVersion === 'string' &&
+      typeof parsed.protocolVersion === 'string' &&
       Array.isArray(parsed.clips)
     ) {
       return parsed as CrpBundle

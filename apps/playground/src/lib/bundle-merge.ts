@@ -26,17 +26,32 @@ export interface MergedClip {
   createdByActivityId?: string
   /** Resolved source records for this clip's sourceRefs */
   resolvedSources: ResolvedSource[]
+  /** Resolved document for this clip */
+  document?: ResolvedDocument
   /** Which bundle key this clip was loaded from */
   bundleKey: string
 }
 
+export type SourceType =
+  | 'human-authored'
+  | 'ai-generated'
+  | 'ai-assisted'
+  | 'external-quoted'
+  | 'unknown'
+
 export interface ResolvedSource {
   id: string
-  sourceType: string
+  sourceType: SourceType
   title?: string
   sourceUri?: string
   authorAgentId?: string
   createdAt?: string
+}
+
+export interface ResolvedDocument {
+  id: string
+  uri?: string
+  title?: string
 }
 
 export interface ResolvedAgent {
@@ -69,6 +84,7 @@ export interface MergedState {
   agents: Map<string, ResolvedAgent>
   sources: Map<string, ResolvedSource>
   activities: Map<string, ResolvedActivity>
+  documents: Map<string, ResolvedDocument>
 }
 
 export function mergeBundles(bundles: Map<string, CrpBundle>): MergedState {
@@ -77,8 +93,21 @@ export function mergeBundles(bundles: Map<string, CrpBundle>): MergedState {
   const agents = new Map<string, ResolvedAgent>()
   const sources = new Map<string, ResolvedSource>()
   const activities = new Map<string, ResolvedActivity>()
+  const documents = new Map<string, ResolvedDocument>()
 
   for (const [bundleKey, bundle] of bundles) {
+    // Collect document
+    if (bundle.document) {
+      const doc = bundle.document
+      if (!documents.has(doc.id)) {
+        documents.set(doc.id, {
+          id: doc.id,
+          uri: doc.uri,
+          title: doc.title
+        })
+      }
+    }
+
     // Collect agents
     if (bundle.agents) {
       for (const agent of bundle.agents) {
@@ -99,7 +128,7 @@ export function mergeBundles(bundles: Map<string, CrpBundle>): MergedState {
         if (!sources.has(src.id)) {
           sources.set(src.id, {
             id: src.id,
-            sourceType: src.sourceType,
+            sourceType: src.sourceType as SourceType,
             title: src.title,
             sourceUri: src.sourceUri,
             authorAgentId: src.authorAgentId,
@@ -123,6 +152,9 @@ export function mergeBundles(bundles: Map<string, CrpBundle>): MergedState {
       }
     }
 
+    // Resolve document for this bundle's clips
+    const bundleDoc = bundle.document ? documents.get(bundle.document.id) : undefined
+
     // Collect clips (deduplicate by clipHash)
     if (bundle.clips) {
       for (const clip of bundle.clips) {
@@ -141,6 +173,7 @@ export function mergeBundles(bundles: Map<string, CrpBundle>): MergedState {
             selectors: clip.selectors,
             createdByActivityId: clip.createdByActivityId,
             resolvedSources,
+            document: bundleDoc,
             bundleKey
           })
         }
@@ -170,6 +203,7 @@ export function mergeBundles(bundles: Map<string, CrpBundle>): MergedState {
     edges: Array.from(edgeMap.values()),
     agents,
     sources,
-    activities
+    activities,
+    documents
   }
 }

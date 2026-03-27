@@ -1,5 +1,6 @@
 import type { CrpBundle } from '@cliproot/protocol'
 import { validateBundle } from '@cliproot/protocol'
+import { parseBundleFromHtml as parseBundleFromHtmlCore } from '@cliproot/core'
 
 const CLIPROOT_MIME = 'web application/x-cliproot+json'
 
@@ -123,30 +124,18 @@ export function readCliprootFromPasteEvent(e: ClipboardEvent): {
 }
 
 /**
- * Extract a CRP bundle from HTML by reading the hidden
- * `<div data-crp-bundle="...">` element written by the extension.
- * Mirrors @cliproot/core's parseBundleFromHtml but uses full schema
- * validation (safe here since we're not in a CSP-restricted context).
+ * Wraps core's parseBundleFromHtml with full schema validation.
+ * Core uses a lightweight structural check (CSP-safe), but in the
+ * playground we can afford full AJV validation.
  */
 function parseBundleFromHtml(html: string): CrpBundle | null {
-  try {
-    const match = html.match(/data-crp-bundle="([^"]*)"/)
-    if (!match) return null
+  const bundle = parseBundleFromHtmlCore(html)
+  if (!bundle) return null
 
-    const decoded = (match[1] ?? '')
-      .replace(/&amp;/g, '&')
-      .replace(/&quot;/g, '"')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-
-    const parsed: unknown = JSON.parse(decoded)
-    const result = validateBundle(parsed)
-    if (result.ok) {
-      return result.value
-    }
-    console.warn('[cliproot] HTML bundle validation failed:', result.errors)
-    return null
-  } catch {
-    return null
+  const result = validateBundle(bundle)
+  if (result.ok) {
+    return result.value
   }
+  console.warn('[cliproot] HTML bundle validation failed:', result.errors)
+  return null
 }
