@@ -27,14 +27,14 @@ interface BundleStore {
   selectedClipHash: string | null
 
   /** View mode for the main panel */
-  view: 'detail' | 'dag'
+  view: 'detail' | 'dag' | 'editor'
 
   /** Actions */
   addBundle: (key: string, bundle: CrpBundle) => void
   addBundles: (entries: [string, CrpBundle][]) => void
   removeBundle: (key: string) => void
   selectClip: (hash: string | null) => void
-  setView: (view: 'detail' | 'dag') => void
+  setView: (view: 'detail' | 'dag' | 'editor') => void
   clearAll: () => void
 }
 
