@@ -44,7 +44,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build playground
-        run: pnpm --filter @cliproot/playground build
+        run: pnpm exec turbo run build --filter=@cliproot/playground
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

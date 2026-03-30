@@ -95,6 +95,17 @@
       "byteSize": 42,
       "contentBase64": "IyBQbGFuCgotIFJlc2VhcmNoCi0gSW1wbGVtZW50Cg==",
       "createdAt": "2026-03-07T20:20:00Z"
+    },
+    {
+      "artifactHash": "sha256-GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+      "id": "artifact_session_json",
+      "projectId": "proj_auth_refactor",
+      "artifactType": "session",
+      "fileName": "session-sess_01.json",
+      "mimeType": "application/json",
+      "byteSize": 28,
+      "contentBase64": "eyJzZXNzaW9uSWQiOiJzZXNzXzAxIn0K",
+      "createdAt": "2026-03-07T20:21:00Z"
     }
   ],
   "clipArtifactRefs": [
@@ -102,6 +113,11 @@
       "clipHash": "sha256-DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
       "artifactHash": "sha256-FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
       "relationship": "cited_in"
+    },
+    {
+      "clipHash": "sha256-DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+      "artifactHash": "sha256-GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+      "relationship": "attached_to"
     }
   ],
   "activities": [

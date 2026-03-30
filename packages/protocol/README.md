@@ -1,10 +1,13 @@
 # `@cliproot/protocol`
 
-`@cliproot/protocol` provides the Week 1 foundation for ClipRoot Protocol (CRP) `v0.0.1`:
+`@cliproot/protocol` provides schema-backed validation and generated types for ClipRoot Protocol `v0.0.3`.
 
-- schema-backed bundle validation
-- typed protocol interfaces derived from the schema
-- deterministic text hashing helpers (`sha256-<base64url>`)
+It includes:
+
+- CRP bundle validation against the canonical `v0.0.3` schema
+- generated TypeScript types derived from that schema
+- deterministic hashing helpers for clip text
+- example fixtures that cover projects, artifacts, prompt-aware activities, and session artifacts
 
 ## Install
 
@@ -26,12 +29,20 @@ const parsed = parseBundle(payload)
 const textHash = createTextHash('Provenance starts here.')
 ```
 
-## Schema Source of Truth
+## Schema Source Of Truth
 
-Canonical schema source lives in:
+Canonical schema artifacts live in:
 
-- `../../schema/crp-v0.0.1.schema.json`
-- `../../schema/examples/crp-v0.0.1.document.example.json`
+- `../../schema/crp-v0.0.3.schema.json`
+- `../../schema/examples/crp-v0.0.3.document.example.json`
+
+The canonical example includes:
+
+- project-scoped clips
+- generalized provenance edges
+- markdown and session artifacts
+- activities with `prompt`, `parameters`, and `endedAt`
+- clip-artifact links such as `attached_to`
 
 Use:
 

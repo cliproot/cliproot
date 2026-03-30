@@ -168,6 +168,17 @@ describe('validateBundle', () => {
     expect(result.ok).toBe(true)
   })
 
+  it('accepts session artifacts attached to clips', () => {
+    const bundle = readFixture()
+    expect(bundle.artifacts?.some((artifact) => artifact.artifactType === 'session')).toBe(true)
+    expect(bundle.clipArtifactRefs?.some((link) => link.relationship === 'attached_to')).toBe(
+      true
+    )
+
+    const result = validateBundle(bundle)
+    expect(result.ok).toBe(true)
+  })
+
   it('accepts optional registry declaration', () => {
     const bundle = readFixture()
     const result = validateBundle({
