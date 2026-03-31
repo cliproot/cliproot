@@ -361,7 +361,17 @@
         },
         "artifactType": {
           "type": "string",
-          "enum": ["markdown", "prompt", "session", "config", "diagram", "text", "json", "binary", "unknown"]
+          "enum": [
+            "markdown",
+            "prompt",
+            "session",
+            "config",
+            "diagram",
+            "text",
+            "json",
+            "binary",
+            "unknown"
+          ]
         },
         "fileName": {
           "type": "string",
@@ -472,7 +482,14 @@
         },
         "edgeType": {
           "type": "string",
-          "enum": ["wasDerivedFrom", "wasGeneratedBy", "used", "wasAttributedTo", "wasAssociatedWith", "actedOnBehalfOf"]
+          "enum": [
+            "wasDerivedFrom",
+            "wasGeneratedBy",
+            "used",
+            "wasAttributedTo",
+            "wasAssociatedWith",
+            "actedOnBehalfOf"
+          ]
         },
         "subjectRef": {
           "$ref": "#/$defs/id"

@@ -37,9 +37,7 @@ export function App() {
               <button
                 onClick={() => setView('detail')}
                 className={`rounded-l px-3 py-1 transition-colors ${
-                  view === 'detail'
-                    ? 'bg-gray-700 text-white'
-                    : 'text-gray-400 hover:text-gray-200'
+                  view === 'detail' ? 'bg-gray-700 text-white' : 'text-gray-400 hover:text-gray-200'
                 }`}
               >
                 Detail
@@ -57,9 +55,7 @@ export function App() {
               <button
                 onClick={() => setView('editor')}
                 className={`rounded-r px-3 py-1 transition-colors ${
-                  view === 'editor'
-                    ? 'bg-gray-700 text-white'
-                    : 'text-gray-400 hover:text-gray-200'
+                  view === 'editor' ? 'bg-gray-700 text-white' : 'text-gray-400 hover:text-gray-200'
                 }`}
               >
                 Editor

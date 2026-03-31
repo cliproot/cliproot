@@ -1,7 +1,12 @@
 import { Mark, mergeAttributes } from '@tiptap/core'
 import { createClipboardPlugin } from './clipboard.js'
 
-export type SourceType = 'human-authored' | 'ai-generated' | 'ai-assisted' | 'external-quoted' | 'unknown'
+export type SourceType =
+  | 'human-authored'
+  | 'ai-generated'
+  | 'ai-assisted'
+  | 'external-quoted'
+  | 'unknown'
 
 export interface AttributionOptions {
   onClipsDetected?: (event: { clipHashes: string[] }) => void
@@ -74,8 +79,9 @@ export const AttributionExtension = Mark.create<AttributionOptions>({
   },
 
   addProseMirrorPlugins() {
-    const onClipsDetected = this.options.onClipsDetected
-      ?? (this.options.onReuseDetected
+    const onClipsDetected =
+      this.options.onClipsDetected ??
+      (this.options.onReuseDetected
         ? (event: { clipHashes: string[] }) => {
             event.clipHashes.forEach((hash) => {
               this.options.onReuseDetected!({ provenanceId: hash })

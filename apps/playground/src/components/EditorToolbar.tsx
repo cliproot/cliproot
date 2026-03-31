@@ -13,48 +13,66 @@ interface ToolbarButton {
 const BUTTONS: ToolbarButton[] = [
   {
     label: 'B',
-    action: (e) => { e.chain().focus().toggleBold().run() },
-    isActive: (e) => e.isActive('bold'),
+    action: (e) => {
+      e.chain().focus().toggleBold().run()
+    },
+    isActive: (e) => e.isActive('bold')
   },
   {
     label: 'I',
-    action: (e) => { e.chain().focus().toggleItalic().run() },
-    isActive: (e) => e.isActive('italic'),
+    action: (e) => {
+      e.chain().focus().toggleItalic().run()
+    },
+    isActive: (e) => e.isActive('italic')
   },
   {
     label: 'H1',
-    action: (e) => { e.chain().focus().toggleHeading({ level: 1 }).run() },
-    isActive: (e) => e.isActive('heading', { level: 1 }),
+    action: (e) => {
+      e.chain().focus().toggleHeading({ level: 1 }).run()
+    },
+    isActive: (e) => e.isActive('heading', { level: 1 })
   },
   {
     label: 'H2',
-    action: (e) => { e.chain().focus().toggleHeading({ level: 2 }).run() },
-    isActive: (e) => e.isActive('heading', { level: 2 }),
+    action: (e) => {
+      e.chain().focus().toggleHeading({ level: 2 }).run()
+    },
+    isActive: (e) => e.isActive('heading', { level: 2 })
   },
   {
     label: 'UL',
-    action: (e) => { e.chain().focus().toggleBulletList().run() },
-    isActive: (e) => e.isActive('bulletList'),
+    action: (e) => {
+      e.chain().focus().toggleBulletList().run()
+    },
+    isActive: (e) => e.isActive('bulletList')
   },
   {
     label: 'OL',
-    action: (e) => { e.chain().focus().toggleOrderedList().run() },
-    isActive: (e) => e.isActive('orderedList'),
+    action: (e) => {
+      e.chain().focus().toggleOrderedList().run()
+    },
+    isActive: (e) => e.isActive('orderedList')
   },
   {
     label: 'Quote',
-    action: (e) => { e.chain().focus().toggleBlockquote().run() },
-    isActive: (e) => e.isActive('blockquote'),
+    action: (e) => {
+      e.chain().focus().toggleBlockquote().run()
+    },
+    isActive: (e) => e.isActive('blockquote')
   },
   {
     label: 'Code',
-    action: (e) => { e.chain().focus().toggleCodeBlock().run() },
-    isActive: (e) => e.isActive('codeBlock'),
+    action: (e) => {
+      e.chain().focus().toggleCodeBlock().run()
+    },
+    isActive: (e) => e.isActive('codeBlock')
   },
   {
     label: 'HR',
-    action: (e) => { e.chain().focus().setHorizontalRule().run() },
-  },
+    action: (e) => {
+      e.chain().focus().setHorizontalRule().run()
+    }
+  }
 ]
 
 export function EditorToolbar({ editor }: EditorToolbarProps) {

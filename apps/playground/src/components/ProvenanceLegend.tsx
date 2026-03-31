@@ -3,7 +3,7 @@ const LEGEND_ITEMS = [
   { label: 'AI Generated', colorClass: 'bg-purple-500' },
   { label: 'AI Assisted', colorClass: 'bg-violet-500' },
   { label: 'External', colorClass: 'bg-amber-500' },
-  { label: 'Unknown', colorClass: 'bg-gray-500' },
+  { label: 'Unknown', colorClass: 'bg-gray-500' }
 ]
 
 export function ProvenanceLegend() {

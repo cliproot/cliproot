@@ -19,7 +19,7 @@ function resolveClipAttrs(bundle: CrpBundle) {
     return {
       clipHash: clip.clipHash,
       sourceType: source?.sourceType ?? 'unknown',
-      content: clip.content ?? clip.selectors?.textQuote?.exact,
+      content: clip.content ?? clip.selectors?.textQuote?.exact
     }
   })
 }
@@ -45,11 +45,7 @@ function applyMarksInRange(
   // Single clip → mark the entire pasted range
   if (clipAttrs.length === 1) {
     const { clipHash, sourceType } = clipAttrs[0]!
-    const tr = state.tr.addMark(
-      insertFrom,
-      insertTo,
-      markType.create({ clipHash, sourceType })
-    )
+    const tr = state.tr.addMark(insertFrom, insertTo, markType.create({ clipHash, sourceType }))
     view.dispatch(tr)
     return
   }
@@ -70,10 +66,14 @@ function applyMarksInRange(
         const from = blockStart + idx
         const to = from + attrs.content.length
         if (from >= insertFrom && to <= insertTo) {
-          tr.addMark(from, to, markType.create({
-            clipHash: attrs.clipHash,
-            sourceType: attrs.sourceType,
-          }))
+          tr.addMark(
+            from,
+            to,
+            markType.create({
+              clipHash: attrs.clipHash,
+              sourceType: attrs.sourceType
+            })
+          )
           modified = true
         }
         idx = blockText.indexOf(attrs.content, idx + attrs.content.length)
@@ -111,13 +111,13 @@ export function ClipEditor() {
               store.selectClip(firstKnown)
             }
           }
-        },
+        }
       }),
-      SlashCommandExtension,
+      SlashCommandExtension
     ],
     editorProps: {
       attributes: {
-        class: 'tiptap',
+        class: 'tiptap'
       },
       handlePaste: (view, event) => {
         const result = readCliprootFromPasteEvent(event)
@@ -138,9 +138,9 @@ export function ClipEditor() {
         }, 0)
 
         return false
-      },
+      }
     },
-    content: '<p></p>',
+    content: '<p></p>'
   })
 
   // Register insert handler so ClipList can insert clips into the editor
@@ -166,9 +166,9 @@ export function ClipEditor() {
           marks: [
             {
               type: 'attribution',
-              attrs: { clipHash, sourceType },
-            },
-          ],
+              attrs: { clipHash, sourceType }
+            }
+          ]
         })
         .run()
     }
@@ -198,7 +198,9 @@ export function ClipEditor() {
     }
 
     editor.on('selectionUpdate', handler)
-    return () => { editor.off('selectionUpdate', handler) }
+    return () => {
+      editor.off('selectionUpdate', handler)
+    }
   }, [editor])
 
   // Sidebar clip selection → scroll editor to that mark
@@ -232,7 +234,9 @@ export function ClipEditor() {
 
   const selectedClip = selectedClipHash ? clips.get(selectedClipHash) : undefined
   const clipPreview = selectedClip
-    ? (selectedClip.content ?? selectedClip.selectors?.textQuote?.exact ?? selectedClip.clipHash.slice(7, 19))
+    ? (selectedClip.content ??
+      selectedClip.selectors?.textQuote?.exact ??
+      selectedClip.clipHash.slice(7, 19))
     : null
 
   return (
