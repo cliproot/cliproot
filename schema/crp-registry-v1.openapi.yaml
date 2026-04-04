@@ -1,0 +1,798 @@
+openapi: "3.1.0"
+info:
+  title: CRP Registry API
+  version: "1.0.0"
+  description: |
+    The CRP Registry Protocol defines how CRP provenance data is published,
+    discovered, and retrieved over HTTP. This is the machine-readable specification
+    for all registry endpoints.
+
+    See `spec/registry.md` for the full prose specification.
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+
+servers:
+  - url: https://registry.cliproot.com
+    description: Cliproot public registry
+
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+paths:
+
+  # ---- Layer 1: Index (Discovery) -----------------------------------------
+
+  /v1/index/config.json:
+    get:
+      operationId: getRegistryConfig
+      summary: Registry configuration
+      description: Returns the registry's discovery configuration including layer URLs and auth settings.
+      tags: [Index]
+      responses:
+        "200":
+          description: Registry configuration.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegistryConfig"
+
+  /v1/index/projects:
+    get:
+      operationId: listProjects
+      summary: List public projects
+      tags: [Index]
+      parameters:
+        - name: owner
+          in: query
+          schema:
+            type: string
+          description: Filter by owner.
+        - name: cursor
+          in: query
+          schema:
+            type: string
+          description: Pagination cursor from a previous response.
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+          description: Maximum results per page.
+      responses:
+        "200":
+          description: Paginated list of projects.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectListResponse"
+
+  /v1/index/projects/{owner}/{name}:
+    get:
+      operationId: getProject
+      summary: Project metadata
+      tags: [Index]
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Project metadata.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectDetail"
+        "404":
+          description: Project not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/index/clips/{hash}:
+    get:
+      operationId: getClipMetadata
+      summary: Clip metadata
+      tags: [Index]
+      parameters:
+        - name: hash
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+          description: Full sha256-* clip hash.
+      responses:
+        "200":
+          description: Clip metadata including sources and edges.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClipMetadata"
+        "404":
+          description: Clip not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/index/clips/{hash}/lineage:
+    get:
+      operationId: getClipLineage
+      summary: Full ancestor chain for a clip
+      tags: [Index]
+      parameters:
+        - name: hash
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+        - name: depth
+          in: query
+          schema:
+            type: integer
+          description: Maximum traversal depth. Unlimited if omitted.
+      responses:
+        "200":
+          description: Derivation DAG rooted at the given clip.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LineageResponse"
+        "404":
+          description: Clip not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---- Layer 2: Download (Content Retrieval) -------------------------------
+
+  /v1/download/packs/{hash}.cliprootpack:
+    get:
+      operationId: downloadPack
+      summary: Download a pack archive by manifest hash
+      tags: [Download]
+      parameters:
+        - name: hash
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+      responses:
+        "200":
+          description: Pack archive bytes.
+          headers:
+            ETag:
+              schema:
+                type: string
+            Cache-Control:
+              schema:
+                type: string
+                default: "public, max-age=31536000, immutable"
+          content:
+            application/x-cliprootpack:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Pack not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/download/clips/{hash}.json:
+    get:
+      operationId: downloadClipBundle
+      summary: Download a CRP bundle by clip hash
+      tags: [Download]
+      parameters:
+        - name: hash
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+      responses:
+        "200":
+          description: CRP bundle JSON.
+          headers:
+            ETag:
+              schema:
+                type: string
+            Cache-Control:
+              schema:
+                type: string
+                default: "public, max-age=31536000, immutable"
+          content:
+            application/json:
+              schema:
+                type: object
+                description: A valid CRP bundle per protocol.md.
+        "404":
+          description: Bundle not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/download/artifacts/{hash}:
+    get:
+      operationId: downloadArtifact
+      summary: Download an artifact blob by hash
+      tags: [Download]
+      parameters:
+        - name: hash
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+      responses:
+        "200":
+          description: Artifact bytes.
+          headers:
+            ETag:
+              schema:
+                type: string
+            Cache-Control:
+              schema:
+                type: string
+                default: "public, max-age=31536000, immutable"
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Artifact not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---- Layer 3: API (Write + Search) --------------------------------------
+
+  /v1/api/packs:
+    post:
+      operationId: publishPack
+      summary: Publish a pack to the registry
+      tags: [API]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/x-cliprootpack:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "201":
+          description: Pack published successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishPackResult"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Duplicate pack (already published at this hash).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "413":
+          description: Pack exceeds size limit.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Invalid pack (validation failure).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/api/clips:
+    post:
+      operationId: publishClips
+      summary: Publish individual CRP bundles
+      tags: [API]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublishClipsRequest"
+      responses:
+        "201":
+          description: Clips published successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishClipsResult"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Invalid bundle(s).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/api/search:
+    get:
+      operationId: searchClips
+      summary: Full-text search across published clips
+      tags: [API]
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query.
+        - name: owner
+          in: query
+          schema:
+            type: string
+          description: Filter by owner.
+        - name: project
+          in: query
+          schema:
+            type: string
+          description: Filter by project name. Must be used with owner.
+        - name: cursor
+          in: query
+          schema:
+            type: string
+          description: Pagination cursor.
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+          description: Maximum results per page.
+      responses:
+        "200":
+          description: Search results.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResponse"
+
+  /v1/api/negotiate:
+    post:
+      operationId: negotiate
+      summary: Delta negotiation (reserved for future use)
+      description: |
+        Reserved for future use. Will support computing the minimal transfer set
+        between client and server. Servers must return 501 Not Implemented in v1.
+      tags: [API]
+      security:
+        - bearerAuth: []
+      responses:
+        "501":
+          description: Not implemented in v1.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ---- Authentication ------------------------------------------------------
+
+  /auth/device:
+    post:
+      operationId: deviceAuthorization
+      summary: Initiate device authorization flow (RFC 8628)
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeviceAuthRequest"
+      responses:
+        "200":
+          description: Device authorization response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeviceAuthResponse"
+
+  /auth/token:
+    post:
+      operationId: exchangeToken
+      summary: Exchange device code or refresh token for access token
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/DeviceTokenRequest"
+                - $ref: "#/components/schemas/RefreshTokenRequest"
+      responses:
+        "200":
+          description: Token response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: |
+            Authorization pending, expired token, or invalid grant.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OAuthErrorResponse"
+
+# ---------------------------------------------------------------------------
+# Components
+# ---------------------------------------------------------------------------
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: OAuth 2.0 Bearer token.
+
+  schemas:
+
+    # ---- Registry Config ---------------------------------------------------
+
+    RegistryConfig:
+      type: object
+      required: [registryVersion, api, download]
+      properties:
+        registryVersion:
+          type: string
+          const: "1"
+        api:
+          type: string
+          format: uri
+        download:
+          type: string
+          format: uri
+        index:
+          type: string
+          format: uri
+        authRequired:
+          type: boolean
+          default: false
+        authUrl:
+          type: string
+          format: uri
+
+    # ---- Index Responses ---------------------------------------------------
+
+    ProjectSummary:
+      type: object
+      required: [owner, name, clipCount, lastPublishedAt]
+      properties:
+        owner:
+          type: string
+        name:
+          type: string
+        clipCount:
+          type: integer
+        lastPublishedAt:
+          type: string
+          format: date-time
+
+    ProjectListResponse:
+      type: object
+      required: [projects]
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProjectSummary"
+        cursor:
+          type: string
+          nullable: true
+
+    ProjectDetail:
+      type: object
+      required: [owner, name, clipCount, edgeCount, artifactCount, lastPublishedAt, createdAt]
+      properties:
+        owner:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        clipCount:
+          type: integer
+        edgeCount:
+          type: integer
+        artifactCount:
+          type: integer
+        lastPublishedAt:
+          type: string
+          format: date-time
+        latestPackHash:
+          type: string
+          pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+        createdAt:
+          type: string
+          format: date-time
+
+    ProjectRef:
+      type: object
+      required: [owner, name]
+      properties:
+        owner:
+          type: string
+        name:
+          type: string
+
+    ClipMetadata:
+      type: object
+      required: [clipHash, textHash, sourceRefs, project, bundleHash]
+      properties:
+        clipHash:
+          type: string
+          pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+        textHash:
+          type: string
+          pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+        content:
+          type: string
+        sourceRefs:
+          type: array
+          items:
+            type: string
+        project:
+          $ref: "#/components/schemas/ProjectRef"
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/Edge"
+        bundleHash:
+          type: string
+          pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+
+    Edge:
+      type: object
+      required: [type, subjectRef, objectRef]
+      properties:
+        type:
+          type: string
+        subjectRef:
+          type: string
+        objectRef:
+          type: string
+
+    LineageClip:
+      type: object
+      required: [clipHash, textHash, sourceRefs, derivedFrom]
+      properties:
+        clipHash:
+          type: string
+          pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+        textHash:
+          type: string
+          pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+        content:
+          type: string
+        sourceRefs:
+          type: array
+          items:
+            type: string
+        derivedFrom:
+          type: array
+          items:
+            type: string
+          description: Clip hashes this clip was derived from.
+
+    LineageResponse:
+      type: object
+      required: [root, clips]
+      properties:
+        root:
+          type: string
+          pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+        clips:
+          type: array
+          items:
+            $ref: "#/components/schemas/LineageClip"
+
+    # ---- API Requests / Responses ------------------------------------------
+
+    PublishPackResult:
+      type: object
+      required: [packHash, owner, project, clips, artifacts, edges, url]
+      properties:
+        packHash:
+          type: string
+          pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+        owner:
+          type: string
+        project:
+          type: string
+        clips:
+          type: integer
+        artifacts:
+          type: integer
+        edges:
+          type: integer
+        url:
+          type: string
+          format: uri
+
+    PublishClipsRequest:
+      type: object
+      required: [owner, project, bundles]
+      properties:
+        owner:
+          type: string
+        project:
+          type: string
+        bundles:
+          type: array
+          items:
+            type: object
+            description: A valid CRP bundle per protocol.md.
+
+    PublishClipsResult:
+      type: object
+      required: [owner, project, accepted, clipHashes]
+      properties:
+        owner:
+          type: string
+        project:
+          type: string
+        accepted:
+          type: integer
+        clipHashes:
+          type: array
+          items:
+            type: string
+            pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+
+    SearchResult:
+      type: object
+      required: [clipHash, content, project, score]
+      properties:
+        clipHash:
+          type: string
+          pattern: "^sha256-[A-Za-z0-9_-]{43,}$"
+        content:
+          type: string
+        project:
+          $ref: "#/components/schemas/ProjectRef"
+        score:
+          type: number
+
+    SearchResponse:
+      type: object
+      required: [results]
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchResult"
+        cursor:
+          type: string
+          nullable: true
+        total:
+          type: integer
+
+    # ---- Auth --------------------------------------------------------------
+
+    DeviceAuthRequest:
+      type: object
+      required: [client_id]
+      properties:
+        client_id:
+          type: string
+
+    DeviceAuthResponse:
+      type: object
+      required: [device_code, user_code, verification_uri, expires_in, interval]
+      properties:
+        device_code:
+          type: string
+        user_code:
+          type: string
+        verification_uri:
+          type: string
+          format: uri
+        expires_in:
+          type: integer
+        interval:
+          type: integer
+
+    DeviceTokenRequest:
+      type: object
+      required: [grant_type, device_code, client_id]
+      properties:
+        grant_type:
+          type: string
+          const: "urn:ietf:params:oauth:grant-type:device_code"
+        device_code:
+          type: string
+        client_id:
+          type: string
+
+    RefreshTokenRequest:
+      type: object
+      required: [grant_type, refresh_token, client_id]
+      properties:
+        grant_type:
+          type: string
+          const: "refresh_token"
+        refresh_token:
+          type: string
+        client_id:
+          type: string
+
+    TokenResponse:
+      type: object
+      required: [access_token, token_type, expires_in]
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          const: "Bearer"
+        expires_in:
+          type: integer
+        refresh_token:
+          type: string
+
+    OAuthErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          description: |
+            OAuth error code: "authorization_pending", "slow_down",
+            "expired_token", "access_denied", or "invalid_grant".
+        error_description:
+          type: string
+
+    # ---- Errors ------------------------------------------------------------
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code (snake_case).
+            message:
+              type: string
+              description: Human-readable description.

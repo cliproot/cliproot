@@ -31,11 +31,15 @@ The full protocol specification lives in [`spec/`](spec/):
 | [Hashing](spec/hashing.md) | Deterministic text hash, clip hash (JCS), and artifact hash algorithms |
 | [Pack Format](spec/pack-format.md) | `.cliprootpack` archive format for portable provenance exchange |
 | [Conformance](spec/conformance.md) | Minimum requirements for CRP-conformant implementations |
+| [Registry](spec/registry.md) | CRP Registry Protocol — publish, discover, and retrieve provenance over HTTP |
 
 The canonical JSON Schema is the authoritative protocol definition:
 
 - **Bundle schema:** [`schema/crp-v0.0.3.schema.json`](schema/crp-v0.0.3.schema.json)
 - **Pack manifest schema:** [`schema/cliproot-pack-v1.manifest.schema.json`](schema/cliproot-pack-v1.manifest.schema.json)
+- **Registry config schema:** [`schema/crp-registry-config-v1.schema.json`](schema/crp-registry-config-v1.schema.json)
+- **Local config schema:** [`schema/cliproot-config-v1.schema.json`](schema/cliproot-config-v1.schema.json)
+- **Registry OpenAPI spec:** [`schema/crp-registry-v1.openapi.yaml`](schema/crp-registry-v1.openapi.yaml)
 - **Examples:** [`schema/examples/`](schema/examples/)
 
 Current protocol version: **CRP v0.0.3** (Draft)

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cliproot.dev/schema/crp-registry-config-v1.schema.json",
+  "title": "CRP Registry Config v1",
+  "description": "Configuration document served by a CRP Registry at /v1/index/config.json. Declares the registry's capabilities and layer URLs.",
+  "type": "object",
+  "properties": {
+    "registryVersion": {
+      "type": "string",
+      "const": "1",
+      "description": "Registry protocol version. Must be \"1\" for this version."
+    },
+    "api": {
+      "type": "string",
+      "format": "uri",
+      "description": "Base URL for the API layer (write operations + search)."
+    },
+    "download": {
+      "type": "string",
+      "format": "uri",
+      "description": "Base URL for the download layer (content retrieval by hash)."
+    },
+    "index": {
+      "type": "string",
+      "format": "uri",
+      "description": "Base URL for the index layer (discovery). If omitted, defaults to the URL from which config.json was fetched."
+    },
+    "authRequired": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, all operations (including reads) require authentication."
+    },
+    "authUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "Base URL for OAuth endpoints (device, token). Required if the registry supports authentication."
+    }
+  },
+  "required": ["registryVersion", "api", "download"],
+  "additionalProperties": false
+}

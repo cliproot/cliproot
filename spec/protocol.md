@@ -198,7 +198,7 @@ Signatures are encoded as JWS (JSON Web Signature) compact serialization and may
 
 ### Registry
 
-A **registry reference** is an optional pointer to an external registry where a bundle has been published. The `uri` identifies the registry and `bundleId` identifies the specific bundle within it. This field is a placeholder for planned registry infrastructure.
+A **registry reference** is an optional pointer to an external registry where a bundle has been published. The `uri` identifies the registry and `bundleId` identifies the specific bundle within it. See [registry.md](registry.md) for the full registry protocol specification.
 
 ---
 

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cliproot.dev/schema/cliproot-config-v1.schema.json",
+  "title": "Cliproot Local Configuration",
+  "description": "Schema for the .cliproot/config.json file that configures a local ClipRoot repository.",
+  "type": "object",
+  "properties": {
+    "protocolVersion": {
+      "type": "string",
+      "description": "CRP protocol version used by this repository (e.g., \"0.0.3\")."
+    },
+    "currentProjectId": {
+      "type": "string",
+      "description": "The active project ID for this repository."
+    },
+    "remotes": {
+      "type": "object",
+      "description": "Named registry remotes. Keys are remote names (e.g., \"origin\").",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Registry base URL. The client appends /v1/index/config.json to discover the registry."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$",
+            "maxLength": 64,
+            "description": "Default owner namespace for push operations on this remote."
+          }
+        },
+        "required": ["url"],
+        "additionalProperties": false
+      }
+    },
+    "defaultRemote": {
+      "type": "string",
+      "description": "Name of the remote used when no --remote flag is specified."
+    }
+  },
+  "required": ["protocolVersion"],
+  "additionalProperties": true
+}

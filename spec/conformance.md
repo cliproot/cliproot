@@ -44,6 +44,14 @@ An implementation that produces or consumes `.cliprootpack` archives must additi
 - **Transport.** How bundles are transmitted (clipboard, HTTP, file, MCP) is not specified.
 - **Signature verification.** Signature support is optional. Implementations that do not produce or consume signatures are still conformant.
 
+### Registry Server
+
+An implementation that serves as a CRP Registry must meet the requirements defined in the [registry protocol specification](registry.md#conformance).
+
+### Registry Client
+
+An implementation that acts as a CRP Registry client must meet the requirements defined in the [registry protocol specification](registry.md#conformance).
+
 ---
 
 ## Future Directions
