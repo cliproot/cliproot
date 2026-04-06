@@ -61,6 +61,7 @@ This is a pnpm/Turborepo monorepo containing the canonical protocol schemas and 
 | [`@cliproot/tiptap`](packages/tiptap/) | Tiptap editor extension for span-level attribution |
 | [`@cliproot/extension`](packages/extension/) | Browser extension (WXT, MV3) — captures provenance on every copy |
 | [`@cliproot/playground`](apps/playground/) | Web app for inspecting clips and visualizing provenance graphs |
+| [`@cliproot/registry`](apps/registry/) | CRP Registry server — reference implementation of the registry protocol |
 
 **Dependency chain:** `protocol` → `core` → `extension`, `tiptap` → `playground`
 
@@ -205,6 +206,84 @@ pnpm --filter @cliproot/playground dev      # http://localhost:5173
 pnpm --filter @cliproot/playground build    # static site output in apps/playground/dist/
 ```
 
+### Registry Server
+
+The registry server (`apps/registry/`) is the reference implementation of the [CRP Registry Protocol](spec/registry.md). It provides the three-layer REST+JSON API (index, download, write) that the `cliproot` CLI's `push`, `pull`, and `search` commands talk to.
+
+The server uses [Hono](https://hono.dev/) on Node.js with SQLite (via `better-sqlite3` + Drizzle ORM) for metadata and a local filesystem blob store for pack and artifact data. No external services are required to run it locally.
+
+#### Running locally
+
+**Prerequisites:** Node.js ≥22, pnpm ≥10.
+
+```bash
+# From the repo root
+pnpm install
+
+# Start the registry in dev mode (auto-restarts on file changes)
+pnpm --filter @cliproot/registry dev
+# → CRP Registry server listening on http://localhost:3002
+```
+
+The server creates `.data/registry.db` and `.data/blobs/` in the `apps/registry/` directory on first start. No migration step is required — the schema is applied automatically.
+
+#### Environment variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | `3002` | HTTP port to listen on |
+| `BASE_URL` | `http://localhost:3002` | Public base URL (used in published pack URLs) |
+| `DATA_DIR` | `./.data` | Directory for the database and blob storage |
+| `DATABASE_PATH` | `$DATA_DIR/registry.db` | Override the SQLite database path |
+| `DEFAULT_OWNER` | `local` | Owner namespace used when a push request omits the `?owner=` param |
+| `MAX_PACK_SIZE` | `104857600` (100 MB) | Maximum accepted `.cliprootpack` upload size in bytes |
+
+```bash
+# Example: custom port and owner
+PORT=4000 DEFAULT_OWNER=jasonwhitwill pnpm --filter @cliproot/registry dev
+```
+
+#### Connect the CLI
+
+Once the registry is running, point the `cliproot` CLI at it:
+
+```bash
+cliproot remote add local http://localhost:3002 --owner jasonwhitwill
+cliproot project use auth-refactor
+cliproot push          # packs and uploads the current project
+cliproot pull          # fetches and imports the latest pack
+cliproot search "oauth pkce"
+```
+
+#### API endpoints
+
+| Layer | Endpoint | Description |
+|-------|----------|-------------|
+| Index | `GET /v1/index/config.json` | Registry discovery (base URLs, auth config) |
+| Index | `GET /v1/index/projects` | List public projects |
+| Index | `GET /v1/index/projects/{owner}/{name}` | Project metadata + latest pack hash |
+| Index | `GET /v1/index/clips/{hash}` | Clip metadata |
+| Index | `GET /v1/index/clips/{hash}/lineage` | Full ancestor chain |
+| Download | `GET /v1/download/packs/{hash}.cliprootpack` | Download a pack by hash |
+| Download | `GET /v1/download/clips/{hash}.json` | Download a bundle by hash |
+| Download | `GET /v1/download/artifacts/{hash}` | Download an artifact blob |
+| API | `POST /v1/api/packs` | Publish a `.cliprootpack` archive |
+| API | `POST /v1/api/clips` | Publish individual CRP bundles (JSON) |
+| API | `GET /v1/api/search?q=...` | Full-text search across published clips |
+
+#### Run registry tests
+
+```bash
+pnpm --filter @cliproot/registry test
+```
+
+#### Build for production
+
+```bash
+pnpm --filter @cliproot/registry build   # compiles TypeScript to dist/
+node apps/registry/dist/index.js         # run the compiled server
+```
+
 ---
 
 ## Development
@@ -263,6 +342,7 @@ cliproot/
     extension/       # @cliproot/extension — browser extension (WXT, MV3)
   apps/
     playground/      # @cliproot/playground — web playground
+    registry/        # @cliproot/registry  — CRP Registry server (Hono + SQLite)
   docs/              # Additional format notes
   research/          # Product/protocol planning notes
 ```
