@@ -5,12 +5,9 @@ import { drizzle } from "drizzle-orm/better-sqlite3";
 import * as schema from "./schema.js";
 import type { RegistryConfig } from "../config.js";
 
-export type RegistryDb = ReturnType<typeof drizzle<typeof schema>>;
+export type RegistryDb = ReturnType<typeof createDb>;
 
-export function createDb(config: RegistryConfig): {
-  db: RegistryDb;
-  sqlite: import("better-sqlite3").Database;
-} {
+export function createDb(config: RegistryConfig) {
   const dir = path.dirname(config.databasePath);
   fs.mkdirSync(dir, { recursive: true });
 
@@ -22,7 +19,7 @@ export function createDb(config: RegistryConfig): {
 
   runMigrations(sqlite);
 
-  return { db, sqlite };
+  return db;
 }
 
 function runMigrations(sqlite: Database.Database) {

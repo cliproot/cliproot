@@ -6,10 +6,7 @@ import { createTextHash, createClipHash } from "@cliproot/protocol";
 import { createApp, type AppContext } from "../src/app.js";
 import type { RegistryConfig } from "../src/config.js";
 
-export function createTestConfig(
-  tmpDir: string,
-  overrides?: Partial<RegistryConfig>,
-): RegistryConfig {
+export function createTestConfig(tmpDir: string): RegistryConfig {
   return {
     port: 0,
     dataDir: tmpDir,
@@ -17,22 +14,13 @@ export function createTestConfig(
     baseUrl: "http://localhost:3002",
     defaultOwner: "testowner",
     maxPackSize: 100 * 1024 * 1024,
-    authRequired: false,
-    authSecret: "test-secret-at-least-32-characters-long",
-    googleClientId: "",
-    googleClientSecret: "",
-    deviceCodeTtl: 900,
-    devicePollInterval: 5,
-    ...overrides,
   };
 }
 
-export async function createTestApp(
-  configOverrides?: Partial<RegistryConfig>,
-) {
+export function createTestApp() {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "crp-registry-test-"));
-  const config = createTestConfig(tmpDir, configOverrides);
-  const app = await createApp({ config });
+  const config = createTestConfig(tmpDir);
+  const app = createApp({ config });
   return { app, config, tmpDir };
 }
 

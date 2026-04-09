@@ -15,17 +15,13 @@ export function createLayer1Routes(ctx: AppContext) {
   // GET /v1/index/config.json
   routes.get("/v1/index/config.json", (c) => {
     const base = ctx.config.baseUrl;
-    const configBody: Record<string, unknown> = {
+    const body = JSON.stringify({
       registryVersion: "1",
       api: `${base}/v1/api`,
       download: `${base}/v1/download`,
       index: `${base}/v1/index`,
-      authRequired: ctx.config.authRequired,
-    };
-    if (ctx.config.authRequired) {
-      configBody.authUrl = `${base}/api/auth`;
-    }
-    const body = JSON.stringify(configBody);
+      authRequired: false,
+    });
 
     const cached = handleEtag(c, body);
     if (cached) return cached;
