@@ -92,9 +92,13 @@ export function createLayer3Routes(ctx: AppContext) {
 
   // GET /v1/api/search — Full-text search across published clips
   routes.get("/v1/api/search", (c) => {
-    const query = c.req.query("q");
-    if (!query) {
+    const rawQuery = c.req.query("q");
+    if (rawQuery == null) {
       throw new AppError(400, "missing_query", "q parameter is required");
+    }
+    const query = rawQuery.trim();
+    if (!query) {
+      throw new AppError(400, "invalid_query", "q parameter cannot be blank");
     }
 
     const owner = c.req.query("owner");

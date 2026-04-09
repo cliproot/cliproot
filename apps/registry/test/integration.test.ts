@@ -141,6 +141,21 @@ describe("CRP Registry Integration", () => {
         expect(result.project.owner).toBe("alice");
       }
     });
+
+    it("GET /v1/api/search supports q=* for scoped project clip listing", async () => {
+      const res = await app.request(
+        "/v1/api/search?q=*&owner=alice&project=auth-refactor&limit=100",
+      );
+      expect(res.status).toBe(200);
+      const body = await res.json();
+      expect(body.total).toBe(3);
+      expect(body.results).toHaveLength(3);
+      for (const result of body.results) {
+        expect(result.project.owner).toBe("alice");
+        expect(result.project.name).toBe("auth-refactor");
+        expect(result.score).toBe(0);
+      }
+    });
   });
 
   describe("Error handling", () => {
@@ -184,6 +199,13 @@ describe("CRP Registry Integration", () => {
       expect(res.status).toBe(400);
       const body = await res.json();
       expect(body.error.code).toBe("missing_query");
+    });
+
+    it("GET /v1/api/search with blank q returns 400", async () => {
+      const res = await app.request("/v1/api/search?q=%20%20%20");
+      expect(res.status).toBe(400);
+      const body = await res.json();
+      expect(body.error.code).toBe("invalid_query");
     });
   });
 

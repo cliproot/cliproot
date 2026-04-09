@@ -259,7 +259,8 @@ When `AUTH_REQUIRED=true`, write endpoints (`POST /v1/api/clips`, `POST /v1/api/
 
 The registry uses [BetterAuth](https://www.better-auth.com/) for user management and provides:
 
-- **Email/password** registration and login (`/api/auth/sign-up/email`, `/api/auth/sign-in/email`)
+- **Browser sign-in / sign-up pages** for interactive login flows (`/sign-in`, `/sign-up`)
+- **Email/password API endpoints** for programmatic registration and login (`POST /api/auth/sign-up/email`, `POST /api/auth/sign-in/email`)
 - **Google SSO** (when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are configured)
 - **OAuth 2.0 device authorization flow** (RFC 8628) for CLI login — the `cliproot login` command initiates this flow, opening a browser to the registry's `/device` verification page
 - **Bearer token authentication** — session tokens from sign-in or device flow are sent as `Authorization: Bearer <token>` headers
@@ -298,6 +299,8 @@ cliproot search "oauth pkce"
 | API | `POST /v1/api/packs` | Publish a `.cliprootpack` archive (auth required when enabled) |
 | API | `POST /v1/api/clips` | Publish individual CRP bundles (auth required when enabled) |
 | API | `GET /v1/api/search?q=...` | Full-text search across published clips |
+| Auth | `GET /sign-in` | Browser sign-in page for extension/web callbacks |
+| Auth | `GET /sign-up` | Browser sign-up page for extension/web callbacks |
 | Auth | `POST /api/auth/sign-up/email` | Register a new user |
 | Auth | `POST /api/auth/sign-in/email` | Sign in and get session token |
 | Auth | `POST /api/auth/device/code` | Initiate device authorization flow (RFC 8628) |

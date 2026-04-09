@@ -39,7 +39,8 @@ export class RegistryClient {
 
   constructor(options: RegistryClientOptions) {
     this.tokenStore = options.tokenStore;
-    this.fetchFn = options.fetch ?? fetch;
+    const fetchFn = options.fetch ?? globalThis.fetch;
+    this.fetchFn = fetchFn.bind(globalThis);
   }
 
   // ── Connection ──────────────────────────────────────────────

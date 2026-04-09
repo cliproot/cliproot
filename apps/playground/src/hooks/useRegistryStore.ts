@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import {
   RegistryClient,
   LocalStorageTokenStore,
+  getAuthUrl,
   type ProjectSummary,
   type ProjectDetail,
   type SearchResult,
@@ -81,7 +82,7 @@ export const useRegistryStore = create<RegistryStore>((set, get) => ({
     const { registryUrl } = get()
     if (!registryUrl) return
     const callbackUrl = window.location.origin + window.location.pathname + '?auth=callback'
-    const authUrl = `${registryUrl}/api/auth/sign-in/email?callbackURL=${encodeURIComponent(callbackUrl)}`
+    const authUrl = getAuthUrl(registryUrl, callbackUrl)
     window.open(authUrl, '_blank', 'width=500,height=600')
   },
 
@@ -127,18 +128,36 @@ export const useRegistryStore = create<RegistryStore>((set, get) => ({
   loadProjectClips: async (owner: string, name: string) => {
     set({ error: null })
     try {
-      // Get project detail to find clip hashes
+      // Load project metadata first
       const detail = await client.getProject(owner, name)
-      // List all clips via search scoped to this project
+      // List clips via search scoped to this project
       const searchResult = await client.search({ q: '*', project: name, owner, limit: 100 })
+      // Search returns clip hashes, but the download endpoint is keyed by bundle hash.
+      const clipDetails = await Promise.all(
+        searchResult.results.map(async (result) => {
+          try {
+            return await client.getClip(result.clipHash)
+          } catch {
+            return null
+          }
+        })
+      )
+
+      const bundleHashes = Array.from(
+        new Set(
+          clipDetails
+            .map((detail) => detail?.bundleHash)
+            .filter((bundleHash): bundleHash is string => Boolean(bundleHash))
+        )
+      )
 
       const entries: [string, CrpBundle][] = []
-      for (const result of searchResult.results) {
+      for (const bundleHash of bundleHashes) {
         try {
-          const bundle = await client.downloadClipBundle(result.clipHash)
+          const bundle = await client.downloadClipBundle(bundleHash)
           const validated = validateBundle(bundle)
           if (validated.ok) {
-            entries.push([`registry-${result.clipHash}`, validated.value as CrpBundle])
+            entries.push([`registry-${bundleHash}`, validated.value as CrpBundle])
           }
         } catch {
           // Skip individual failed downloads

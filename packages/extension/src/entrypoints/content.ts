@@ -29,6 +29,27 @@ export default defineContentScript({
       return globalEnabled
     }
 
+    function isTransientRuntimeDisconnect(error: unknown): boolean {
+      const message = error instanceof Error ? error.message : String(error)
+      return (
+        message.includes('Could not establish connection. Receiving end does not exist.') ||
+        message.includes('Extension context invalidated.')
+      )
+    }
+
+    async function sendMessageSafely<TMessage, TResponse = void>(
+      message: TMessage
+    ): Promise<TResponse | undefined> {
+      try {
+        return await chrome.runtime.sendMessage(message)
+      } catch (error) {
+        if (isTransientRuntimeDisconnect(error)) {
+          return undefined
+        }
+        throw error
+      }
+    }
+
     // Sync enabled state from storage
     chrome.storage.local.get(
       ['enabled', 'siteSettings', 'highlightsEnabled'],
@@ -80,33 +101,35 @@ export default defineContentScript({
     async function applyHighlights() {
       if (!highlightsEnabled || highlightsRendered) return
 
-      let response: GetPageClipsResponse | undefined
       try {
-        response = await chrome.runtime.sendMessage({
+        const response = await sendMessageSafely<
+          { type: 'get-page-clips'; url: string },
+          GetPageClipsResponse
+        >({
           type: 'get-page-clips',
           url: window.location.href
         })
+
+        if (!response?.clips?.length) return
+
+        injectStyles()
+
+        for (const clip of response.clips) {
+          if (!clip.selectors?.textQuote && !clip.content) continue
+          try {
+            const range = anchorClip(clip, document.body)
+            if (range) {
+              highlightRange(range, clip.clipHash)
+            }
+          } catch {
+            // Best-effort — skip clips that can't be anchored
+          }
+        }
+
+        highlightsRendered = true
       } catch {
         return
       }
-
-      if (!response?.clips?.length) return
-
-      injectStyles()
-
-      for (const clip of response.clips) {
-        if (!clip.selectors?.textQuote && !clip.content) continue
-        try {
-          const range = anchorClip(clip, document.body)
-          if (range) {
-            highlightRange(range, clip.clipHash)
-          }
-        } catch {
-          // Best-effort — skip clips that can't be anchored
-        }
-      }
-
-      highlightsRendered = true
     }
 
     function clearHighlights() {
@@ -198,7 +221,7 @@ export default defineContentScript({
         })
 
         // Notify background about the captured clip
-        chrome.runtime.sendMessage({
+        void sendMessageSafely({
           type: 'clip-captured',
           hostname: location.hostname,
           url: window.location.href,
@@ -239,7 +262,7 @@ export default defineContentScript({
 
         const textHash = createTextHash(plainText)
 
-        chrome.runtime.sendMessage({
+        void sendMessageSafely({
           type: 'paste-detected',
           hostname: location.hostname,
           url: window.location.href,

@@ -115,6 +115,19 @@ describe("Auth — enabled", () => {
   });
 
   describe("BetterAuth sign-up and sign-in", () => {
+    it("serves a browser sign-in page for interactive login", async () => {
+      const callbackUrl =
+        "chrome-extension://jfnechnmlmfccilhoceelohlkpobmime/options.html?auth=callback";
+      const res = await app.request(
+        `/sign-in?callbackURL=${encodeURIComponent(callbackUrl)}`,
+      );
+      expect(res.status).toBe(200);
+      expect(res.headers.get("content-type")).toContain("text/html");
+      const body = await res.text();
+      expect(body).toContain("Sign In");
+      expect(body).toContain("/api/auth/sign-in/email");
+    });
+
     it("allows user registration via /api/auth/sign-up/email", async () => {
       const res = await app.request("/api/auth/sign-up/email", {
         method: "POST",
@@ -184,6 +197,16 @@ describe("Auth — enabled", () => {
   describe("Device flow endpoints", () => {
     let deviceCode: string;
     let userCode: string;
+
+    it("serves a device page that links to the browser sign-in page", async () => {
+      const res = await app.request("/device?user_code=ABCD1234");
+      expect(res.status).toBe(200);
+      const body = await res.text();
+      expect(body).toContain("/sign-in?callbackURL=");
+      expect(body).toContain(
+        encodeURIComponent("http://localhost:3002/device?user_code=ABCD1234"),
+      );
+    });
 
     it("POST /api/auth/device/code initiates device flow", async () => {
       const res = await app.request("/api/auth/device/code", {

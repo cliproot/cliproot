@@ -1,9 +1,9 @@
 import type { SessionInfo } from "./types.js";
 
 /**
- * Returns the BetterAuth sign-in URL for a browser-based OAuth redirect flow.
+ * Returns the registry's browser sign-in page for a callback-based auth flow.
  * The caller opens this URL in a popup or tab; after authentication the registry
- * redirects back to `callbackUrl`.
+ * redirects back to `callbackUrl`, including a bearer token when needed.
  */
 export function getAuthUrl(
   registryUrl: string,
@@ -13,11 +13,11 @@ export function getAuthUrl(
   const params = new URLSearchParams({
     callbackURL: callbackUrl,
   });
-  return `${base}/api/auth/sign-in/email?${params.toString()}`;
+  return `${base}/sign-in?${params.toString()}`;
 }
 
 /**
- * Returns the BetterAuth sign-up URL for new user registration.
+ * Returns the registry's browser sign-up page for callback-based registration.
  */
 export function getSignUpUrl(
   registryUrl: string,
@@ -27,7 +27,7 @@ export function getSignUpUrl(
   const params = new URLSearchParams({
     callbackURL: callbackUrl,
   });
-  return `${base}/api/auth/sign-up/email?${params.toString()}`;
+  return `${base}/sign-up?${params.toString()}`;
 }
 
 /**
@@ -36,7 +36,7 @@ export function getSignUpUrl(
 export async function checkSession(
   registryUrl: string,
   token: string,
-  fetchFn: typeof fetch = fetch,
+  fetchFn: typeof fetch = globalThis.fetch.bind(globalThis),
 ): Promise<SessionInfo> {
   const base = registryUrl.replace(/\/+$/, "");
   const res = await fetchFn(`${base}/api/auth/get-session`, {

@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { RegistryClient } from "../client.js";
 import { MemoryTokenStore } from "../token-storage.js";
 import { RegistryAuthError, RegistryNotFoundError } from "../errors.js";
+import { getAuthUrl, getSignUpUrl } from "../auth.js";
 
 function jsonResponse(body: unknown, init?: ResponseInit): Response {
   const headers = new Headers(init?.headers);
@@ -52,6 +53,57 @@ describe("RegistryClient", () => {
       expect(await client.isConnected()).toBe(false);
       await store.setRegistryUrl("http://localhost:3000");
       expect(await client.isConnected()).toBe(true);
+    });
+
+    it("binds fetch to the global context for browser compatibility", async () => {
+      const expectedThis = { name: "fetch-context" };
+      const fetchWithContext = vi.fn(function (this: unknown) {
+        if (this !== expectedThis) {
+          throw new TypeError("Illegal operation");
+        }
+        return Promise.resolve(
+          jsonResponse({
+            registryVersion: "1",
+            api: "http://localhost:3000/v1",
+            download: "http://localhost:3000/v1",
+            index: "http://localhost:3000/v1",
+            authRequired: false,
+          }),
+        );
+      }) as typeof fetch;
+
+      client = new RegistryClient({
+        tokenStore: store,
+        fetch: fetchWithContext.bind(expectedThis) as typeof fetch,
+      });
+
+      await expect(client.connect("http://localhost:3000")).resolves.toMatchObject({
+        registryVersion: "1",
+      });
+    });
+  });
+
+  describe("browser auth URLs", () => {
+    it("builds the interactive sign-in page URL", () => {
+      expect(
+        getAuthUrl(
+          "http://localhost:3002/",
+          "chrome-extension://abc/options.html?auth=callback",
+        ),
+      ).toBe(
+        "http://localhost:3002/sign-in?callbackURL=chrome-extension%3A%2F%2Fabc%2Foptions.html%3Fauth%3Dcallback",
+      );
+    });
+
+    it("builds the interactive sign-up page URL", () => {
+      expect(
+        getSignUpUrl(
+          "http://localhost:3002/",
+          "http://localhost:5173/?auth=callback",
+        ),
+      ).toBe(
+        "http://localhost:3002/sign-up?callbackURL=http%3A%2F%2Flocalhost%3A5173%2F%3Fauth%3Dcallback",
+      );
     });
   });
 
